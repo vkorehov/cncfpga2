@@ -1,0 +1,402 @@
+################################################################################
+###########
+# Define Device, Package and Speed Grade
+################################################################################
+#
+CONFIG PART = XC2S50-PQ208-5 ;
+#
+################################################################################
+# Avoid Configuration Pins For Master Serial
+################################################################################
+#
+CONFIG PROHIBIT = "P154" ; # DOUT
+CONFIG PROHIBIT = "P153" ; # DIN
+CONFIG PROHIBIT = "P107" ; # INIT
+#
+################################################################################
+# I/O Assignment
+################################################################################
+#
+NET  "PING_DONE"   LOC = "P96" | IOB = TRUE | IOSTANDARD = LVTTL | SLEW=SLOW;
+
+NET  "PCLK"                                                       LOC = "P185" ;
+NET  "INTA_N"                                            LOC = "P195" ;
+NET  "RST_N"                                             LOC = "P199" ;
+NET  "GNT_N"                                             LOC = "P200" ;
+NET  "REQ_N"                                             LOC = "P201" ;
+NET  "AD<31>"                                         LOC = "P203" ;
+NET  "AD<30>"                                         LOC = "P204" ;
+NET  "AD<29>"                                         LOC = "P205" ;
+NET  "AD<28>"                                         LOC = "P206" ;
+NET  "AD<27>"                                         LOC = "P3"   ;
+NET  "AD<26>"                                         LOC = "P4"   ;
+NET  "AD<25>"                                         LOC = "P5"   ;
+NET  "AD<24>"                                         LOC = "P6"   ;
+NET  "CBE_N<3>"                                         LOC = "P8"   ;
+NET  "IDSEL"                                           LOC = "P9"   ;
+NET  "AD<23>"                                         LOC = "P10"  ;
+NET  "AD<22>"                                         LOC = "P14"  ;
+NET  "AD<21>"                                         LOC = "P15"  ;
+NET  "AD<20>"                                         LOC = "P16"  ;
+NET  "AD<19>"                                         LOC = "P17"  ;
+NET  "AD<18>"                                         LOC = "P18"  ;
+NET  "AD<17>"                                         LOC = "P20"  ;
+NET  "AD<16>"                                         LOC = "P21"  ;
+NET  "CBE_N<2>"                                         LOC = "P22"  ;
+NET  "FRAME_N"                                          LOC = "P23"  ;
+NET  "IRDY_N"                                           LOC = "P24"  ;
+#
+NET  "TRDY_N"                                           LOC = "P27"  ;
+NET  "DEVSEL_N"                                         LOC = "P29"  ;
+NET  "STOP_N"                                           LOC = "P30"  ;
+NET  "PERR_N"                                           LOC = "P31"  ;
+NET  "SERR_N"                                           LOC = "P33"  ;
+NET  "PAR"                                            LOC = "P34"  ;
+NET  "CBE_N<1>"                                         LOC = "P35"  ;
+NET  "AD<15>"                                         LOC = "P36"  ;
+NET  "AD<14>"                                         LOC = "P37"  ;
+NET  "AD<13>"                                         LOC = "P41"  ;
+NET  "AD<12>"                                         LOC = "P42"  ;
+NET  "AD<11>"                                         LOC = "P43"  ;
+NET  "AD<10>"                                         LOC = "P45"  ;
+NET  "AD<9>"                                          LOC = "P46"  ;
+NET  "AD<8>"                                          LOC = "P47"  ;
+NET  "CBE_N<0>"                                         LOC = "P48"  ;
+NET  "AD<7>"                                          LOC = "P49"  ;
+NET  "AD<6>"                                          LOC = "P57"  ;
+NET  "AD<5>"                                          LOC = "P58"  ;
+NET  "AD<4>"                                          LOC = "P59"  ;
+NET  "AD<3>"                                          LOC = "P61"  ;
+NET  "AD<2>"                                          LOC = "P62"  ;
+NET  "AD<1>"                                          LOC = "P63"  ;
+NET  "AD<0>"                                          LOC = "P67"  ;
+#
+################################################################################
+# Force IOB Flip Flop Use For Data Path Output Flip Flops
+################################################################################
+#
+INST XPCI_CBOQ3                              IOB = TRUE ;
+INST XPCI_CBOQ2                              IOB = TRUE ;
+INST XPCI_CBOQ1                              IOB = TRUE ;
+INST XPCI_CBOQ0                              IOB = TRUE ;
+INST XPCI_PAROQ                              IOB = TRUE ;
+#
+INST XPCI_ADOQ31                              IOB = TRUE ;
+INST XPCI_ADOQ30                              IOB = TRUE ;
+INST XPCI_ADOQ29                              IOB = TRUE ;
+INST XPCI_ADOQ28                              IOB = TRUE ;
+INST XPCI_ADOQ27                              IOB = TRUE ;
+INST XPCI_ADOQ26                              IOB = TRUE ;
+INST XPCI_ADOQ25                              IOB = TRUE ;
+INST XPCI_ADOQ24                              IOB = TRUE ;
+INST XPCI_ADOQ23                              IOB = TRUE ;
+INST XPCI_ADOQ22                              IOB = TRUE ;
+INST XPCI_ADOQ21                              IOB = TRUE ;
+INST XPCI_ADOQ20                              IOB = TRUE ;
+INST XPCI_ADOQ19                              IOB = TRUE ;
+INST XPCI_ADOQ18                              IOB = TRUE ;
+INST XPCI_ADOQ17                              IOB = TRUE ;
+INST XPCI_ADOQ16                              IOB = TRUE ;
+INST XPCI_ADOQ15                              IOB = TRUE ;
+INST XPCI_ADOQ14                              IOB = TRUE ;
+INST XPCI_ADOQ13                              IOB = TRUE ;
+INST XPCI_ADOQ12                              IOB = TRUE ;
+INST XPCI_ADOQ11                              IOB = TRUE ;
+INST XPCI_ADOQ10                              IOB = TRUE ;
+INST XPCI_ADOQ9                               IOB = TRUE ;
+INST XPCI_ADOQ8                               IOB = TRUE ;
+INST XPCI_ADOQ7                               IOB = TRUE ;
+INST XPCI_ADOQ6                               IOB = TRUE ;
+INST XPCI_ADOQ5                               IOB = TRUE ;
+INST XPCI_ADOQ4                               IOB = TRUE ;
+INST XPCI_ADOQ3                               IOB = TRUE ;
+INST XPCI_ADOQ2                               IOB = TRUE ;
+INST XPCI_ADOQ1                               IOB = TRUE ;
+INST XPCI_ADOQ0                               IOB = TRUE ;
+#
+################################################################################
+# Force IOB Flip Flop Use For Data Path Input Flip Flops
+################################################################################
+#
+INST "XPCI_CBIQ3"                                           IOB = TRUE ;
+INST "XPCI_CBIQ2"                                           IOB = TRUE ;
+INST "XPCI_CBIQ1"                                           IOB = TRUE ;
+INST "XPCI_CBIQ0"                                           IOB = TRUE ;
+#
+INST "XPCI_ADIQ31"                                          IOB = TRUE ;
+INST "XPCI_ADIQ30"                                          IOB = TRUE ;
+INST "XPCI_ADIQ29"                                          IOB = TRUE ;
+INST "XPCI_ADIQ28"                                          IOB = TRUE ;
+INST "XPCI_ADIQ27"                                          IOB = TRUE ;
+INST "XPCI_ADIQ26"                                          IOB = TRUE ;
+INST "XPCI_ADIQ25"                                          IOB = TRUE ;
+INST "XPCI_ADIQ24"                                          IOB = TRUE ;
+INST "XPCI_ADIQ23"                                          IOB = TRUE ;
+INST "XPCI_ADIQ22"                                          IOB = TRUE ;
+INST "XPCI_ADIQ21"                                          IOB = TRUE ;
+INST "XPCI_ADIQ20"                                          IOB = TRUE ;
+INST "XPCI_ADIQ19"                                          IOB = TRUE ;
+INST "XPCI_ADIQ18"                                          IOB = TRUE ;
+INST "XPCI_ADIQ17"                                          IOB = TRUE ;
+INST "XPCI_ADIQ16"                                          IOB = TRUE ;
+INST "XPCI_ADIQ15"                                          IOB = TRUE ;
+INST "XPCI_ADIQ14"                                          IOB = TRUE ;
+INST "XPCI_ADIQ13"                                          IOB = TRUE ;
+INST "XPCI_ADIQ12"                                          IOB = TRUE ;
+INST "XPCI_ADIQ11"                                          IOB = TRUE ;
+INST "XPCI_ADIQ10"                                          IOB = TRUE ;
+INST "XPCI_ADIQ9"                                           IOB = TRUE ;
+INST "XPCI_ADIQ8"                                           IOB = TRUE ;
+INST "XPCI_ADIQ7"                                           IOB = TRUE ;
+INST "XPCI_ADIQ6"                                           IOB = TRUE ;
+INST "XPCI_ADIQ5"                                           IOB = TRUE ;
+INST "XPCI_ADIQ4"                                           IOB = TRUE ;
+INST "XPCI_ADIQ3"                                           IOB = TRUE ;
+INST "XPCI_ADIQ2"                                           IOB = TRUE ;
+INST "XPCI_ADIQ1"                                           IOB = TRUE ;
+INST "XPCI_ADIQ0"                                           IOB = TRUE ;
+#
+################################################################################
+# Force IOB Flip Flop Use For Control Signals
+################################################################################
+#
+#INST "PCI_CORE/PCI_LC/MASTER/REQ_IOB/IFD"                           IOB = TRUE ;
+#INST "PCI_CORE/PCI_LC/MASTER/REQ_IOB/OFD"                           IOB = TRUE ;
+#INST "PCI_CORE/PCI_LC/MASTER/REQO_OE"                               IOB = TRUE ;
+#
+#INST "PCI_CORE/PCI_LC/MASTER/GNT_IOB/IFD"                           IOB = TRUE ;
+#INST "PCI_CORE/PCI_LC/MASTER/GNT_IOB/OFD"                           IOB = TRUE ;
+#
+#INST "PCI_CORE/PCI_LC/IDSEL/IFD"                                    IOB = TRUE ;
+#INST "PCI_CORE/PCI_LC/IDSEL/OFD"                                    IOB = TRUE ;
+#
+#INST "PCI_CORE/PCI_LC/PCI-PAR/OE_SERR_FF"                           IOB = TRUE ;
+#INST "PCI_CORE/PCI_LC/MASTER/OE_FRAME/PERR_OE"                      IOB = TRUE ;
+#INST "PCI_CORE/PCI_LC/SERR/IFD"                                     IOB = TRUE ;
+#INST "PCI_CORE/PCI_LC/SERR/OFD"                                     IOB = TRUE ;
+#INST "PCI_CORE/PCI_LC/PERR/IFD"                                     IOB = TRUE ;
+#INST "PCI_CORE/PCI_LC/PERR/OFD"                                     IOB = TRUE ;
+#
+#INST "PCI_CORE/PCI_LC/MASTER/OE_FRAME/OE_FRAME"                     IOB = TRUE ;
+#INST "PCI_CORE/PCI_LC/MASTER/OE_FRAME/OE_IRDY"                      IOB = TRUE ;
+#INST "PCI_CORE/PCI_LC/FRAME/IFD"                                    IOB = TRUE ;
+#INST "PCI_CORE/PCI_LC/FRAME/OFD"                                    IOB = TRUE ;
+#INST "PCI_CORE/PCI_LC/IRDY/IFD"                                     IOB = TRUE ;
+#INST "PCI_CORE/PCI_LC/IRDY/OFD"                                     IOB = TRUE ;
+#
+#INST "PCI_CORE/PCI_LC/PCI-CNTL/PCI-OFCN/PCI-XOE/OE_DEVSEL"          IOB = TRUE ;
+#INST "PCI_CORE/PCI_LC/PCI-CNTL/PCI-OFCN/PCI-XOE/OE_STOP"            IOB = TRUE ;
+#INST "PCI_CORE/PCI_LC/PCI-CNTL/PCI-OFCN/PCI-XOE/OE_TRDY"            IOB = TRUE ;
+#INST "PCI_CORE/PCI_LC/DEVSEL/IFD"                                   IOB = TRUE ;
+#INST "PCI_CORE/PCI_LC/DEVSEL/OFD"                                   IOB = TRUE ;
+#INST "PCI_CORE/PCI_LC/STOP/IFD"                                     IOB = TRUE ;
+#INST "PCI_CORE/PCI_LC/STOP/OFD"                                     IOB = TRUE ;
+#INST "PCI_CORE/PCI_LC/TRDY/IFD"                                     IOB = TRUE ;
+#INST "PCI_CORE/PCI_LC/TRDY/OFD"                                     IOB = TRUE ;
+#
+################################################################################
+# Clock Buffer Placement
+################################################################################
+#
+INST "XPCI_CKA"                                      LOC = "GCLKBUF3" ;
+#
+#
+################################################################################
+# I/O Time Names
+################################################################################
+#
+NET  "SERR_N"                                  TNM = PADS:PCI_PADS_C ;
+NET  "PERR_N"                                  TNM = PADS:PCI_PADS_C ;
+NET  "REQ_N"                                    TNM = PADS:PCI_PADS_G ;
+NET  "GNT_N"                                    TNM = PADS:PCI_PADS_G ;
+NET  "FRAME_N"                                 TNM = PADS:PCI_PADS_C ;
+NET  "IRDY_N"                                  TNM = PADS:PCI_PADS_C ;
+NET  "TRDY_N"                                  TNM = PADS:PCI_PADS_C ;
+NET  "DEVSEL_N"                                TNM = PADS:PCI_PADS_C ;
+NET  "STOP_N"                                  TNM = PADS:PCI_PADS_C ;
+NET  "CBE_N<3>"                                TNM = PADS:PCI_PADS_B ;
+NET  "CBE_N<2>"                                TNM = PADS:PCI_PADS_B ;
+NET  "CBE_N<1>"                                TNM = PADS:PCI_PADS_B ;
+NET  "CBE_N<0>"                                TNM = PADS:PCI_PADS_B ;
+NET  "PAR"                                   TNM = PADS:PCI_PADS_P ;
+NET  "IDSEL"                                  TNM = PADS:PCI_PADS_C ;
+NET  "INTA_N"                                   TNM = PADS:PCI_PADS_X ;
+NET  "RST_N"                                    TNM = PADS:PCI_PADS_X ;
+#
+NET  "AD<31>"                                TNM = PADS:PCI_PADS_D ;
+NET  "AD<30>"                                TNM = PADS:PCI_PADS_D ;
+NET  "AD<29>"                                TNM = PADS:PCI_PADS_D ;
+NET  "AD<28>"                                TNM = PADS:PCI_PADS_D ;
+NET  "AD<27>"                                TNM = PADS:PCI_PADS_D ;
+NET  "AD<26>"                                TNM = PADS:PCI_PADS_D ;
+NET  "AD<25>"                                TNM = PADS:PCI_PADS_D ;
+NET  "AD<24>"                                TNM = PADS:PCI_PADS_D ;
+NET  "AD<23>"                                TNM = PADS:PCI_PADS_D ;
+NET  "AD<22>"                                TNM = PADS:PCI_PADS_D ;
+NET  "AD<21>"                                TNM = PADS:PCI_PADS_D ;
+NET  "AD<20>"                                TNM = PADS:PCI_PADS_D ;
+NET  "AD<19>"                                TNM = PADS:PCI_PADS_D ;
+NET  "AD<18>"                                TNM = PADS:PCI_PADS_D ;
+NET  "AD<17>"                                TNM = PADS:PCI_PADS_D ;
+NET  "AD<16>"                                TNM = PADS:PCI_PADS_D ;
+NET  "AD<15>"                                TNM = PADS:PCI_PADS_D ;
+NET  "AD<14>"                                TNM = PADS:PCI_PADS_D ;
+NET  "AD<13>"                                TNM = PADS:PCI_PADS_D ;
+NET  "AD<12>"                                TNM = PADS:PCI_PADS_D ;
+NET  "AD<11>"                                TNM = PADS:PCI_PADS_D ;
+NET  "AD<10>"                                TNM = PADS:PCI_PADS_D ;
+NET  "AD<9>"                                 TNM = PADS:PCI_PADS_D ;
+NET  "AD<8>"                                 TNM = PADS:PCI_PADS_D ;
+NET  "AD<7>"                                 TNM = PADS:PCI_PADS_D ;
+NET  "AD<6>"                                 TNM = PADS:PCI_PADS_D ;
+NET  "AD<5>"                                 TNM = PADS:PCI_PADS_D ;
+NET  "AD<4>"                                 TNM = PADS:PCI_PADS_D ;
+NET  "AD<3>"                                 TNM = PADS:PCI_PADS_D ;
+NET  "AD<2>"                                 TNM = PADS:PCI_PADS_D ;
+NET  "AD<1>"                                 TNM = PADS:PCI_PADS_D ;
+NET  "AD<0>"                                 TNM = PADS:PCI_PADS_D ;
+#
+################################################################################
+# Special I/O Time Names
+################################################################################
+#
+INST XPCI_CBOQ3                   TNM = FFS:PCI_FFS_OCE ;
+INST XPCI_CBOQ2                   TNM = FFS:PCI_FFS_OCE ;
+INST XPCI_CBOQ1                   TNM = FFS:PCI_FFS_OCE ;
+INST XPCI_CBOQ0                   TNM = FFS:PCI_FFS_OCE ;
+#
+INST XPCI_ADOQ31                   TNM = FFS:PCI_FFS_OCE ;
+INST XPCI_ADOQ30                   TNM = FFS:PCI_FFS_OCE ;
+INST XPCI_ADOQ29                   TNM = FFS:PCI_FFS_OCE ;
+INST XPCI_ADOQ28                   TNM = FFS:PCI_FFS_OCE ;
+INST XPCI_ADOQ27                   TNM = FFS:PCI_FFS_OCE ;
+INST XPCI_ADOQ26                   TNM = FFS:PCI_FFS_OCE ;
+INST XPCI_ADOQ25                   TNM = FFS:PCI_FFS_OCE ;
+INST XPCI_ADOQ24                   TNM = FFS:PCI_FFS_OCE ;
+INST XPCI_ADOQ23                   TNM = FFS:PCI_FFS_OCE ;
+INST XPCI_ADOQ22                   TNM = FFS:PCI_FFS_OCE ;
+INST XPCI_ADOQ21                   TNM = FFS:PCI_FFS_OCE ;
+INST XPCI_ADOQ20                   TNM = FFS:PCI_FFS_OCE ;
+INST XPCI_ADOQ19                   TNM = FFS:PCI_FFS_OCE ;
+INST XPCI_ADOQ18                   TNM = FFS:PCI_FFS_OCE ;
+INST XPCI_ADOQ17                   TNM = FFS:PCI_FFS_OCE ;
+INST XPCI_ADOQ16                   TNM = FFS:PCI_FFS_OCE ;
+INST XPCI_ADOQ15                   TNM = FFS:PCI_FFS_OCE ;
+INST XPCI_ADOQ14                   TNM = FFS:PCI_FFS_OCE ;
+INST XPCI_ADOQ13                   TNM = FFS:PCI_FFS_OCE ;
+INST XPCI_ADOQ12                   TNM = FFS:PCI_FFS_OCE ;
+INST XPCI_ADOQ11                   TNM = FFS:PCI_FFS_OCE ;
+INST XPCI_ADOQ10                   TNM = FFS:PCI_FFS_OCE ;
+INST XPCI_ADOQ9                    TNM = FFS:PCI_FFS_OCE ;
+INST XPCI_ADOQ8                    TNM = FFS:PCI_FFS_OCE ;
+INST XPCI_ADOQ7                    TNM = FFS:PCI_FFS_OCE ;
+INST XPCI_ADOQ6                    TNM = FFS:PCI_FFS_OCE ;
+INST XPCI_ADOQ5                    TNM = FFS:PCI_FFS_OCE ;
+INST XPCI_ADOQ4                    TNM = FFS:PCI_FFS_OCE ;
+INST XPCI_ADOQ3                    TNM = FFS:PCI_FFS_OCE ;
+INST XPCI_ADOQ2                    TNM = FFS:PCI_FFS_OCE ;
+INST XPCI_ADOQ1                    TNM = FFS:PCI_FFS_OCE ;
+INST XPCI_ADOQ0                    TNM = FFS:PCI_FFS_OCE ;
+#
+INST XPCI_CBIQ3                                TNM = FFS:PCI_FFS_ICE ;
+INST XPCI_CBIQ2                                TNM = FFS:PCI_FFS_ICE ;
+INST XPCI_CBIQ1                                TNM = FFS:PCI_FFS_ICE ;
+INST XPCI_CBIQ0                                TNM = FFS:PCI_FFS_ICE ;
+#
+INST XPCI_ADIQ31                               TNM = FFS:PCI_FFS_ICE ;
+INST XPCI_ADIQ30                               TNM = FFS:PCI_FFS_ICE ;
+INST XPCI_ADIQ29                               TNM = FFS:PCI_FFS_ICE ;
+INST XPCI_ADIQ28                               TNM = FFS:PCI_FFS_ICE ;
+INST XPCI_ADIQ27                               TNM = FFS:PCI_FFS_ICE ;
+INST XPCI_ADIQ26                               TNM = FFS:PCI_FFS_ICE ;
+INST XPCI_ADIQ25                               TNM = FFS:PCI_FFS_ICE ;
+INST XPCI_ADIQ24                               TNM = FFS:PCI_FFS_ICE ;
+INST XPCI_ADIQ23                               TNM = FFS:PCI_FFS_ICE ;
+INST XPCI_ADIQ22                               TNM = FFS:PCI_FFS_ICE ;
+INST XPCI_ADIQ21                               TNM = FFS:PCI_FFS_ICE ;
+INST XPCI_ADIQ20                               TNM = FFS:PCI_FFS_ICE ;
+INST XPCI_ADIQ19                               TNM = FFS:PCI_FFS_ICE ;
+INST XPCI_ADIQ18                               TNM = FFS:PCI_FFS_ICE ;
+INST XPCI_ADIQ17                               TNM = FFS:PCI_FFS_ICE ;
+INST XPCI_ADIQ16                               TNM = FFS:PCI_FFS_ICE ;
+INST XPCI_ADIQ15                               TNM = FFS:PCI_FFS_ICE ;
+INST XPCI_ADIQ14                               TNM = FFS:PCI_FFS_ICE ;
+INST XPCI_ADIQ13                               TNM = FFS:PCI_FFS_ICE ;
+INST XPCI_ADIQ12                               TNM = FFS:PCI_FFS_ICE ;
+INST XPCI_ADIQ11                               TNM = FFS:PCI_FFS_ICE ;
+INST XPCI_ADIQ10                               TNM = FFS:PCI_FFS_ICE ;
+INST XPCI_ADIQ9                                TNM = FFS:PCI_FFS_ICE ;
+INST XPCI_ADIQ8                                TNM = FFS:PCI_FFS_ICE ;
+INST XPCI_ADIQ7                                TNM = FFS:PCI_FFS_ICE ;
+INST XPCI_ADIQ6                                TNM = FFS:PCI_FFS_ICE ;
+INST XPCI_ADIQ5                                TNM = FFS:PCI_FFS_ICE ;
+INST XPCI_ADIQ4                                TNM = FFS:PCI_FFS_ICE ;
+INST XPCI_ADIQ3                                TNM = FFS:PCI_FFS_ICE ;
+INST XPCI_ADIQ2                                TNM = FFS:PCI_FFS_ICE ;
+INST XPCI_ADIQ1                                TNM = FFS:PCI_FFS_ICE ;
+INST XPCI_ADIQ0                                TNM = FFS:PCI_FFS_ICE ;
+#
+################################################################################
+# Time Groups
+################################################################################
+#
+TIMEGRP "FAST_FFS" = "PCI_FFS_ICE" : "PCI_FFS_OCE" ;
+TIMEGRP "SLOW_FFS" = FFS : EXCEPT : "FAST_FFS" ;
+#
+################################################################################
+# Time Specs
+################################################################################
+#
+# Important Note:  The timespecs used in this section cover all possible
+# paths.  Depending on the design options, some of the timespecs may
+# not contain any paths.  Such timespecs are ignored by PAR and TRCE.
+#
+# Note:  Timespecs are derived from the PCI Bus Specification, the
+# minimum clock delay of 0.000 ns, the maximum clock delay of 3.000 ns,
+# and a 90% tracking ratio between clock and data paths.
+#
+# Then, for paths on the primary global clock network:
+#
+#          1) Clk To Out   = 11.000ns - 3.000ns            =  8.000ns
+#          2) Setup        =  7.000ns + 0.90 * 0.000ns     =  7.000ns
+#          3) Grant Setup  = 10.000ns + 0.90 * 0.000ns     = 10.000ns
+#          4) AD/CBE Toff  = 28.000ns - 3.000ns            = 25.000ns
+#          5) AD/CBE Ton   = 30.000ns + 11.000ns - 3.000ns = 38.000ns
+#          6) Period       =                               = 30.000ns
+#
+# The following timespecs are for setup specifications.  When using a
+# single clock, these timespecs are merged as pads-to-all.
+#
+TIMESPEC TS_ADF_SETUP = FROM : "PCI_PADS_D" : TO : FFS :  7.000 ;
+TIMESPEC TS_PAF_SETUP = FROM : "PCI_PADS_P" : TO : FFS :  7.000 ;
+TIMESPEC TS_BYF_SETUP = FROM : "PCI_PADS_B" : TO : FFS :  7.000 ;
+TIMESPEC TS_CNF_SETUP = FROM : "PCI_PADS_C" : TO : FFS :  7.000 ;
+TIMESPEC TS_GNF_SETUP = FROM : "PCI_PADS_G" : TO : FFS : 10.000 ;
+#
+# All critical input and output is registered to ensure clock to out
+# specifications are met by silicon.  When using a single clock, these
+# timespecs are merged as all-to-pads.
+#
+TIMESPEC TS_CNF_CKOUT = FROM : FFS : TO : "PCI_PADS_C" :  8.000 ;
+TIMESPEC TS_GNF_CKOUT = FROM : FFS : TO : "PCI_PADS_G" :  8.000 ;
+#
+# Similar to above, the critical input and output paths are registered
+# to ensure clock to out specifications are made by silicon.  Since this
+# interface uses address stepping, the clock to valid and clock to data
+# have different specifications.
+#
+TIMESPEC TS_ADF_CKOUT = FROM : "FAST_FFS" : TO : "PCI_PADS_D" :  8.000 ;
+TIMESPEC TS_ADS_TSOUT = FROM : "SLOW_FFS" : TO : "PCI_PADS_D" : 25.000 ;
+#
+TIMESPEC TS_BYF_CKOUT = FROM : "FAST_FFS" : TO : "PCI_PADS_B" :  8.000 ;
+TIMESPEC TS_BYS_TSOUT = FROM : "SLOW_FFS" : TO : "PCI_PADS_B" : 25.000 ;
+#
+TIMESPEC TS_PAF_CKOUT = FROM : "FAST_FFS" : TO : "PCI_PADS_P" :  8.000 ;
+TIMESPEC TS_PAS_TSOUT = FROM : "SLOW_FFS" : TO : "PCI_PADS_P" : 25.000 ;
+#
+# The design may be covered by a default period constraint.  This is
+# generally sufficient when using a single clock.  The period should
+# be set at the minimum PCI Bus clock period.
+#
+NET "PCLK" PERIOD = 30.000;
+#
