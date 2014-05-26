@@ -271,3 +271,6 @@ _ngo
 *.xncf
 *.lnk
 *.xbcd
+*.udo
+*.fdo
+*.wlf

@@ -39,7 +39,6 @@ module cnc_tb;
   wire          SINGLE;
   wire          PARK;
   wire          PING_DONE;
-  wire          PING_REQUEST32;
 
 
   // Instantiate master stimulus device
@@ -61,8 +60,7 @@ module cnc_tb;
                 .CLK( CLK ),
                 .SINGLE( SINGLE ),
                 .PARK( PARK ),
-                .PING_DONE( PING_DONE ),
-                .PING_REQUEST32( PING_REQUEST32 )
+                .PING_DONE( PING_DONE )
                 );
 
 
@@ -78,10 +76,9 @@ module cnc_tb;
 
 
   // Instantiate FPGA PCI design
-
   cnc_top UUT (
                 .AD( AD ),
-                .CBE( CBE ),
+                .CBE_N( CBE ),
                 .PAR( PAR ),
                 .FRAME_N( FRAME_N ),
                 .TRDY_N( TRDY_N ),
@@ -89,15 +86,14 @@ module cnc_tb;
                 .STOP_N( STOP_N ),
                 .DEVSEL_N( DEVSEL_N ),
                 .IDSEL( IDSEL ),
-                .INTR_A( INTR_A ),
+                .INTA_N( INTR_A ),
                 .PERR_N( PERR_N ),
                 .SERR_N( SERR_N ),
                 .REQ_N( REQ_N ),
                 .GNT_N( GNT_N ),
                 .RST_N( RST_N ),
                 .PCLK( CLK ),
-                .PING_DONE( PING_DONE ),
-                .PING_REQUEST32( PING_REQUEST32 )
+                .PING_DONE( PING_DONE )
                 );
 
 
@@ -118,7 +114,6 @@ module cnc_tb;
 
 
   // Start the simulation history manager.
-
   initial
   begin
     $shm_open("waves.shm");
@@ -127,7 +122,6 @@ module cnc_tb;
 
 
   // Instantiate a Bus Recorder
-
   busrecord REC (
                 .AD( AD ),
                 .CBE( CBE ),

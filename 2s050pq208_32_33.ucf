@@ -75,44 +75,10 @@ NET  "AD<0>"                                          LOC = "P67"  ;
 # Force IOB Flip Flop Use For Data Path Output Flip Flops
 ################################################################################
 #
-INST XPCI_CBOQ3                              IOB = TRUE ;
-INST XPCI_CBOQ2                              IOB = TRUE ;
-INST XPCI_CBOQ1                              IOB = TRUE ;
-INST XPCI_CBOQ0                              IOB = TRUE ;
-INST XPCI_PAROQ                              IOB = TRUE ;
+#INST PCI/CBE_O                                IOB = TRUE ;
+#INST PCI/PAR_O                                IOB = TRUE ;
 #
-INST XPCI_ADOQ31                              IOB = TRUE ;
-INST XPCI_ADOQ30                              IOB = TRUE ;
-INST XPCI_ADOQ29                              IOB = TRUE ;
-INST XPCI_ADOQ28                              IOB = TRUE ;
-INST XPCI_ADOQ27                              IOB = TRUE ;
-INST XPCI_ADOQ26                              IOB = TRUE ;
-INST XPCI_ADOQ25                              IOB = TRUE ;
-INST XPCI_ADOQ24                              IOB = TRUE ;
-INST XPCI_ADOQ23                              IOB = TRUE ;
-INST XPCI_ADOQ22                              IOB = TRUE ;
-INST XPCI_ADOQ21                              IOB = TRUE ;
-INST XPCI_ADOQ20                              IOB = TRUE ;
-INST XPCI_ADOQ19                              IOB = TRUE ;
-INST XPCI_ADOQ18                              IOB = TRUE ;
-INST XPCI_ADOQ17                              IOB = TRUE ;
-INST XPCI_ADOQ16                              IOB = TRUE ;
-INST XPCI_ADOQ15                              IOB = TRUE ;
-INST XPCI_ADOQ14                              IOB = TRUE ;
-INST XPCI_ADOQ13                              IOB = TRUE ;
-INST XPCI_ADOQ12                              IOB = TRUE ;
-INST XPCI_ADOQ11                              IOB = TRUE ;
-INST XPCI_ADOQ10                              IOB = TRUE ;
-INST XPCI_ADOQ9                               IOB = TRUE ;
-INST XPCI_ADOQ8                               IOB = TRUE ;
-INST XPCI_ADOQ7                               IOB = TRUE ;
-INST XPCI_ADOQ6                               IOB = TRUE ;
-INST XPCI_ADOQ5                               IOB = TRUE ;
-INST XPCI_ADOQ4                               IOB = TRUE ;
-INST XPCI_ADOQ3                               IOB = TRUE ;
-INST XPCI_ADOQ2                               IOB = TRUE ;
-INST XPCI_ADOQ1                               IOB = TRUE ;
-INST XPCI_ADOQ0                               IOB = TRUE ;
+#INST PCI/AD_O                                 IOB = TRUE ;
 #
 ################################################################################
 # Force IOB Flip Flop Use For Data Path Input Flip Flops
@@ -160,39 +126,39 @@ INST "XPCI_ADIQ0"                                           IOB = TRUE ;
 # Force IOB Flip Flop Use For Control Signals
 ################################################################################
 #
-#INST "PCI_CORE/PCI_LC/MASTER/REQ_IOB/IFD"                           IOB = TRUE ;
-#INST "PCI_CORE/PCI_LC/MASTER/REQ_IOB/OFD"                           IOB = TRUE ;
-#INST "PCI_CORE/PCI_LC/MASTER/REQO_OE"                               IOB = TRUE ;
+#INST XPCI_REQOQ                                                     IOB = TRUE ;
+#INST "PCI_CORE/PCI_LC/MASTER/REQO_OE"                              IOB = TRUE ;
 #
-#INST "PCI_CORE/PCI_LC/MASTER/GNT_IOB/IFD"                           IOB = TRUE ;
-#INST "PCI_CORE/PCI_LC/MASTER/GNT_IOB/OFD"                           IOB = TRUE ;
+INST XPCI_IDSELIQ                                                   IOB = TRUE ;
 #
-#INST "PCI_CORE/PCI_LC/IDSEL/IFD"                                    IOB = TRUE ;
-#INST "PCI_CORE/PCI_LC/IDSEL/OFD"                                    IOB = TRUE ;
+#INST "PCI_CORE/PCI_LC/PCI-PAR/OE_SERR_FF"                          IOB = TRUE ;
+#INST "PCI_CORE/PCI_LC/MASTER/OE_FRAME/PERR_OE"                     IOB = TRUE ;
+INST XPCI_SERRIQ                                                    IOB = TRUE ;
+INST XPCI_PERRIQ                                                    IOB = TRUE ;
+#INST XPCI_PERROQ                                                    IOB = TRUE ;
 #
-#INST "PCI_CORE/PCI_LC/PCI-PAR/OE_SERR_FF"                           IOB = TRUE ;
-#INST "PCI_CORE/PCI_LC/MASTER/OE_FRAME/PERR_OE"                      IOB = TRUE ;
-#INST "PCI_CORE/PCI_LC/SERR/IFD"                                     IOB = TRUE ;
-#INST "PCI_CORE/PCI_LC/SERR/OFD"                                     IOB = TRUE ;
-#INST "PCI_CORE/PCI_LC/PERR/IFD"                                     IOB = TRUE ;
-#INST "PCI_CORE/PCI_LC/PERR/OFD"                                     IOB = TRUE ;
+#INST "PCI_CORE/PCI_LC/MASTER/OE_FRAME/OE_FRAME"                    IOB = TRUE ;
+#INST "PCI_CORE/PCI_LC/MASTER/OE_FRAME/OE_IRDY"                     IOB = TRUE ;
+
+INST XPCI_FRAMEIQ                                                   IOB = TRUE ;
+#INST XPCI_FRAMEOQ                                                   IOB = TRUE ;
+INST XPCI_IRDYIQ                                                    IOB = TRUE ;
+#INST XPCI_IRDYOQ                                                    IOB = TRUE ;
 #
-#INST "PCI_CORE/PCI_LC/MASTER/OE_FRAME/OE_FRAME"                     IOB = TRUE ;
-#INST "PCI_CORE/PCI_LC/MASTER/OE_FRAME/OE_IRDY"                      IOB = TRUE ;
-#INST "PCI_CORE/PCI_LC/FRAME/IFD"                                    IOB = TRUE ;
-#INST "PCI_CORE/PCI_LC/FRAME/OFD"                                    IOB = TRUE ;
-#INST "PCI_CORE/PCI_LC/IRDY/IFD"                                     IOB = TRUE ;
-#INST "PCI_CORE/PCI_LC/IRDY/OFD"                                     IOB = TRUE ;
-#
-#INST "PCI_CORE/PCI_LC/PCI-CNTL/PCI-OFCN/PCI-XOE/OE_DEVSEL"          IOB = TRUE ;
-#INST "PCI_CORE/PCI_LC/PCI-CNTL/PCI-OFCN/PCI-XOE/OE_STOP"            IOB = TRUE ;
-#INST "PCI_CORE/PCI_LC/PCI-CNTL/PCI-OFCN/PCI-XOE/OE_TRDY"            IOB = TRUE ;
-#INST "PCI_CORE/PCI_LC/DEVSEL/IFD"                                   IOB = TRUE ;
-#INST "PCI_CORE/PCI_LC/DEVSEL/OFD"                                   IOB = TRUE ;
-#INST "PCI_CORE/PCI_LC/STOP/IFD"                                     IOB = TRUE ;
-#INST "PCI_CORE/PCI_LC/STOP/OFD"                                     IOB = TRUE ;
-#INST "PCI_CORE/PCI_LC/TRDY/IFD"                                     IOB = TRUE ;
-#INST "PCI_CORE/PCI_LC/TRDY/OFD"                                     IOB = TRUE ;
+#INST "PCI_CORE/PCI_LC/PCI-CNTL/PCI-OFCN/PCI-XOE/OE_DEVSEL"         IOB = TRUE ;
+#INST "PCI_CORE/PCI_LC/PCI-CNTL/PCI-OFCN/PCI-XOE/OE_STOP"           IOB = TRUE ;
+#INST "PCI_CORE/PCI_LC/PCI-CNTL/PCI-OFCN/PCI-XOE/OE_TRDY"           IOB = TRUE ;
+
+INST XPCI_DEVSELIQ                                                  IOB = TRUE ;
+INST PCI/XPCI_DEVSELOQ                                              IOB = TRUE ;
+INST PCI/XPCI_OEDEVSELOQ                                            IOB = TRUE ;
+
+INST XPCI_STOPIQ                                                    IOB = TRUE ;
+#INST XPCI_STOPOQ                                                   IOB = TRUE ;
+INST XPCI_TRDYIQ                                                    IOB = TRUE ;
+INST PCI/XPCI_TRDYOQ                                                IOB = TRUE ;
+INST PCI/XPCI_OETRDYOQ                                              IOB = TRUE ;
+
 #
 ################################################################################
 # Clock Buffer Placement
@@ -207,8 +173,8 @@ INST "XPCI_CKA"                                      LOC = "GCLKBUF3" ;
 #
 NET  "SERR_N"                                  TNM = PADS:PCI_PADS_C ;
 NET  "PERR_N"                                  TNM = PADS:PCI_PADS_C ;
-NET  "REQ_N"                                    TNM = PADS:PCI_PADS_G ;
-NET  "GNT_N"                                    TNM = PADS:PCI_PADS_G ;
+NET  "REQ_N"                                   TNM = PADS:PCI_PADS_G ;
+NET  "GNT_N"                                   TNM = PADS:PCI_PADS_G ;
 NET  "FRAME_N"                                 TNM = PADS:PCI_PADS_C ;
 NET  "IRDY_N"                                  TNM = PADS:PCI_PADS_C ;
 NET  "TRDY_N"                                  TNM = PADS:PCI_PADS_C ;
@@ -218,10 +184,10 @@ NET  "CBE_N<3>"                                TNM = PADS:PCI_PADS_B ;
 NET  "CBE_N<2>"                                TNM = PADS:PCI_PADS_B ;
 NET  "CBE_N<1>"                                TNM = PADS:PCI_PADS_B ;
 NET  "CBE_N<0>"                                TNM = PADS:PCI_PADS_B ;
-NET  "PAR"                                   TNM = PADS:PCI_PADS_P ;
-NET  "IDSEL"                                  TNM = PADS:PCI_PADS_C ;
-NET  "INTA_N"                                   TNM = PADS:PCI_PADS_X ;
-NET  "RST_N"                                    TNM = PADS:PCI_PADS_X ;
+NET  "PAR"                                     TNM = PADS:PCI_PADS_P ;
+NET  "IDSEL"                                   TNM = PADS:PCI_PADS_C ;
+NET  "INTA_N"                                  TNM = PADS:PCI_PADS_X ;
+NET  "RST_N"                                   TNM = PADS:PCI_PADS_X ;
 #
 NET  "AD<31>"                                TNM = PADS:PCI_PADS_D ;
 NET  "AD<30>"                                TNM = PADS:PCI_PADS_D ;
@@ -260,43 +226,10 @@ NET  "AD<0>"                                 TNM = PADS:PCI_PADS_D ;
 # Special I/O Time Names
 ################################################################################
 #
-INST XPCI_CBOQ3                   TNM = FFS:PCI_FFS_OCE ;
-INST XPCI_CBOQ2                   TNM = FFS:PCI_FFS_OCE ;
-INST XPCI_CBOQ1                   TNM = FFS:PCI_FFS_OCE ;
-INST XPCI_CBOQ0                   TNM = FFS:PCI_FFS_OCE ;
+
+#INST PCI/CBE_O                   TNM = FFS:PCI_FFS_OCE ;
 #
-INST XPCI_ADOQ31                   TNM = FFS:PCI_FFS_OCE ;
-INST XPCI_ADOQ30                   TNM = FFS:PCI_FFS_OCE ;
-INST XPCI_ADOQ29                   TNM = FFS:PCI_FFS_OCE ;
-INST XPCI_ADOQ28                   TNM = FFS:PCI_FFS_OCE ;
-INST XPCI_ADOQ27                   TNM = FFS:PCI_FFS_OCE ;
-INST XPCI_ADOQ26                   TNM = FFS:PCI_FFS_OCE ;
-INST XPCI_ADOQ25                   TNM = FFS:PCI_FFS_OCE ;
-INST XPCI_ADOQ24                   TNM = FFS:PCI_FFS_OCE ;
-INST XPCI_ADOQ23                   TNM = FFS:PCI_FFS_OCE ;
-INST XPCI_ADOQ22                   TNM = FFS:PCI_FFS_OCE ;
-INST XPCI_ADOQ21                   TNM = FFS:PCI_FFS_OCE ;
-INST XPCI_ADOQ20                   TNM = FFS:PCI_FFS_OCE ;
-INST XPCI_ADOQ19                   TNM = FFS:PCI_FFS_OCE ;
-INST XPCI_ADOQ18                   TNM = FFS:PCI_FFS_OCE ;
-INST XPCI_ADOQ17                   TNM = FFS:PCI_FFS_OCE ;
-INST XPCI_ADOQ16                   TNM = FFS:PCI_FFS_OCE ;
-INST XPCI_ADOQ15                   TNM = FFS:PCI_FFS_OCE ;
-INST XPCI_ADOQ14                   TNM = FFS:PCI_FFS_OCE ;
-INST XPCI_ADOQ13                   TNM = FFS:PCI_FFS_OCE ;
-INST XPCI_ADOQ12                   TNM = FFS:PCI_FFS_OCE ;
-INST XPCI_ADOQ11                   TNM = FFS:PCI_FFS_OCE ;
-INST XPCI_ADOQ10                   TNM = FFS:PCI_FFS_OCE ;
-INST XPCI_ADOQ9                    TNM = FFS:PCI_FFS_OCE ;
-INST XPCI_ADOQ8                    TNM = FFS:PCI_FFS_OCE ;
-INST XPCI_ADOQ7                    TNM = FFS:PCI_FFS_OCE ;
-INST XPCI_ADOQ6                    TNM = FFS:PCI_FFS_OCE ;
-INST XPCI_ADOQ5                    TNM = FFS:PCI_FFS_OCE ;
-INST XPCI_ADOQ4                    TNM = FFS:PCI_FFS_OCE ;
-INST XPCI_ADOQ3                    TNM = FFS:PCI_FFS_OCE ;
-INST XPCI_ADOQ2                    TNM = FFS:PCI_FFS_OCE ;
-INST XPCI_ADOQ1                    TNM = FFS:PCI_FFS_OCE ;
-INST XPCI_ADOQ0                    TNM = FFS:PCI_FFS_OCE ;
+#INST PCI/AD_O                    TNM = FFS:PCI_FFS_OCE ;
 #
 INST XPCI_CBIQ3                                TNM = FFS:PCI_FFS_ICE ;
 INST XPCI_CBIQ2                                TNM = FFS:PCI_FFS_ICE ;
@@ -335,13 +268,17 @@ INST XPCI_ADIQ3                                TNM = FFS:PCI_FFS_ICE ;
 INST XPCI_ADIQ2                                TNM = FFS:PCI_FFS_ICE ;
 INST XPCI_ADIQ1                                TNM = FFS:PCI_FFS_ICE ;
 INST XPCI_ADIQ0                                TNM = FFS:PCI_FFS_ICE ;
+
+INST PCI/PING_DONE                             TNM = FFS:USER_FFS;
 #
 ################################################################################
 # Time Groups
 ################################################################################
 #
+#INST PCI TNM = FFS PCI_FFS;
+TIMEGRP "ALL_FFS" = FFS : EXCEPT : "USER_FFS" ;
 TIMEGRP "FAST_FFS" = "PCI_FFS_ICE" : "PCI_FFS_OCE" ;
-TIMEGRP "SLOW_FFS" = FFS : EXCEPT : "FAST_FFS" ;
+TIMEGRP "SLOW_FFS" = PCI_FFS : EXCEPT : "FAST_FFS" ;
 #
 ################################################################################
 # Time Specs
@@ -367,18 +304,18 @@ TIMEGRP "SLOW_FFS" = FFS : EXCEPT : "FAST_FFS" ;
 # The following timespecs are for setup specifications.  When using a
 # single clock, these timespecs are merged as pads-to-all.
 #
-TIMESPEC TS_ADF_SETUP = FROM : "PCI_PADS_D" : TO : FFS :  7.000 ;
-TIMESPEC TS_PAF_SETUP = FROM : "PCI_PADS_P" : TO : FFS :  7.000 ;
-TIMESPEC TS_BYF_SETUP = FROM : "PCI_PADS_B" : TO : FFS :  7.000 ;
-TIMESPEC TS_CNF_SETUP = FROM : "PCI_PADS_C" : TO : FFS :  7.000 ;
-TIMESPEC TS_GNF_SETUP = FROM : "PCI_PADS_G" : TO : FFS : 10.000 ;
+TIMESPEC TS_ADF_SETUP = FROM : "PCI_PADS_D" : TO : ALL_FFS :  7.000 ;
+TIMESPEC TS_PAF_SETUP = FROM : "PCI_PADS_P" : TO : ALL_FFS :  7.000 ;
+TIMESPEC TS_BYF_SETUP = FROM : "PCI_PADS_B" : TO : ALL_FFS :  7.000 ;
+TIMESPEC TS_CNF_SETUP = FROM : "PCI_PADS_C" : TO : ALL_FFS :  7.000 ;
+TIMESPEC TS_GNF_SETUP = FROM : "PCI_PADS_G" : TO : ALL_FFS : 10.000 ;
 #
 # All critical input and output is registered to ensure clock to out
 # specifications are met by silicon.  When using a single clock, these
 # timespecs are merged as all-to-pads.
 #
-TIMESPEC TS_CNF_CKOUT = FROM : FFS : TO : "PCI_PADS_C" :  8.000 ;
-TIMESPEC TS_GNF_CKOUT = FROM : FFS : TO : "PCI_PADS_G" :  8.000 ;
+TIMESPEC TS_CNF_CKOUT = FROM : ALL_FFS : TO : "PCI_PADS_C" :  8.000 ;
+TIMESPEC TS_GNF_CKOUT = FROM : ALL_FFS : TO : "PCI_PADS_G" :  8.000 ;
 #
 # Similar to above, the critical input and output paths are registered
 # to ensure clock to out specifications are made by silicon.  Since this

@@ -28,8 +28,7 @@ module stimulus (
                 CLK,
                 SINGLE,
                 PARK,
-                PING_DONE,
-                PING_REQUEST32
+                PING_DONE
                 );
 
 
@@ -50,18 +49,15 @@ module stimulus (
   output        SINGLE;
   output        PARK;
   input         PING_DONE;
-  output        PING_REQUEST32;
 
 
   // Define Timing Parameters
-
   parameter TCLKH = 15;
   parameter TCLKL = 15;
   parameter TDEL =  5;
 
 
   // Define Internal Registers
-
   reg           pciclk;
   reg           pciclk_en;
   reg  [8*12:1] operation;
@@ -92,7 +88,6 @@ module stimulus (
 
 
   // Define port hookup
-
   assign #TDEL AD = ad_oe ? reg_ad : 32'bz;
   assign #TDEL CBE = cbe_oe ? reg_cbe : 4'bz;
   assign #TDEL PAR = par_oe ? reg_par : 1'bz;
@@ -110,7 +105,6 @@ module stimulus (
 
 
   // Clock generation
-
   always
   begin
     pciclk <= 0;
@@ -123,7 +117,6 @@ module stimulus (
 
 
   // PCI Parity Generation
-
   always @(posedge pciclk)
   begin
     // Always computed, selectively enabled
@@ -510,32 +503,61 @@ module stimulus (
 
 
     // read device and vendor id
-    READ_CONFIG(32'h00000000);
+    //READ_CONFIG(32'h00000000);
 
     // write latency timer
-    WRITE_CONFIG(32'h0000000c, 32'h0000ff00);
-    READ_CONFIG(32'h0000000c);
+    //WRITE_CONFIG(32'h0000000c, 32'h0000ff00);
+    //READ_CONFIG(32'h0000000c);
 
 
     // setup io base address register
-    WRITE_CONFIG(32'h00000010, 32'h10000000);
-    READ_CONFIG(32'h00000010);
+    //WRITE_CONFIG(32'h00000010, 32'h10000000);
+    //READ_CONFIG(32'h00000010);
 
     // setup mem32 base address register
-    WRITE_CONFIG(32'h00000014, 32'h20000000);
-    READ_CONFIG(32'h00000014);
+    //WRITE_CONFIG(32'h00000014, 32'h20000000);
+    //READ_CONFIG(32'h00000014);
 
     // setup command register to enable mastering
-    WRITE_CONFIG(32'h00000004, 32'hff000147);
-    READ_CONFIG(32'h00000004);
+    //WRITE_CONFIG(32'h00000004, 32'hff000147);
+    //READ_CONFIG(32'h00000004);
 
 
     // read io space
-    READ32(4'b0010, 32'h10000000);
+    //READ32(4'b0010, 32'h10000000);
 
     // write io space
-    WRITE32(4'b0011, 32'h10000000, 32'h20202020);
-    READ32(4'b0010, 32'h10000000);
+    WRITE32(4'b0011, 32'h00000200, 32'h20202021);
+    //READ32(4'b0010, 32'h10000000);
+
+
+
+
+
+    $display(" ");
+    INTERCYCLE_GAP;
+    INTERCYCLE_GAP;
+    INTERCYCLE_GAP;
+    INTERCYCLE_GAP;
+    INTERCYCLE_GAP;
+    INTERCYCLE_GAP;
+    INTERCYCLE_GAP;
+    INTERCYCLE_GAP;
+    $display(" ");
+    $display("Simulation complete...");
+    $display(" ");
+
+    // disable pciclk
+    pciclk_en <= 0;
+
+    // stop simulation
+    $finish;
+
+
+
+
+
+
 
 
     // read mem32 space
