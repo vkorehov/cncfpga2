@@ -64,7 +64,6 @@ parameter WINDOW_BITS = 3;
 reg [31:0] mem;
      
 reg [31:0] IO_ADDR;   // we respond to an "IO write" at this address
-reg [WINDOW_BITS:0]Offset; // current data offset
 reg IsWrite;
 
 
@@ -121,7 +120,7 @@ FDPE XPCI_CBEOQ2 (.Q(CBE_O_N[2]),.D(CBE_O_FF_N[2]),.C(CLK),.CE(1'b1),.PRE(RST));
 FDPE XPCI_CBEOQ3 (.Q(CBE_O_N[3]),.D(CBE_O_FF_N[3]),.C(CLK),.CE(1'b1),.PRE(RST));
 
 reg OE_CBE_FF_N;
-FDPE XPCI_CBEOQ (.Q(OE_CBE_N),.D(OE_CBE_FF_N),.C(CLK),.CE(1'b1),.PRE(RST));
+FDPE XPCI_OECBEOQ (.Q(OE_CBE_N),.D(OE_CBE_FF_N),.C(CLK),.CE(1'b1),.PRE(RST));
 
     
 reg TRDY_O_FF_N;
@@ -160,7 +159,6 @@ initial
 begin 
     mem <= 0;
     IO_ADDR <= 32'h00000200;
-    Offset <= 0;
     IsWrite <= 0;
     
     AD_O_FF <= 32'h00000000;   
@@ -184,7 +182,6 @@ end
 
 
 wire TransactionStart = DEVSEL_O_FF_N & ~FRAME_I_N & (IDSEL_I | (AD_I[31:WINDOW_BITS]==IO_ADDR[31:WINDOW_BITS])); 
-wire TransactionEnd = ~DEVSEL_O_FF_N & FRAME_I_N & IRDY_I_N;
 wire DataTransfer = ~DEVSEL_O_FF_N & ~IRDY_I_N;
 
 always @(posedge CLK)
