@@ -528,7 +528,7 @@ module stimulus (
 
     // write io space
     WRITE32(4'b0011, 32'h00000200, 32'h20202021);
-    //READ32(4'b0010, 32'h10000000);
+    READ32(4'b0010, 32'h00000200);
 
 
 

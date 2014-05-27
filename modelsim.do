@@ -20,9 +20,11 @@ add wave -logic /PERR_N
 add wave -logic /IDSEL
 add wave -logic /INTR_A
 add wave -label "OPERATION" -radix ascii /cnc_tb/STM/operation
-add wave -logic /UUT/FRAME_IN
-add wave -logic /UUT/CLK
-add wave -logic /UUT/RST
-add wave -logic /UUT/FRAME_I_N
+add wave -label "TransactionStart" -logic /UUT/PCI/TransactionStart
+add wave -label "TransactionEnd" -logic /UUT/PCI/TransactionEnd
+add wave -label "DataTransfer" -logic /UUT/PCI/DataTransfer
+add wave -label "DEVSEL_O_FF_N" -logic /UUT/PCI/DEVSEL_O_FF_N
+
+
 
 run -all
