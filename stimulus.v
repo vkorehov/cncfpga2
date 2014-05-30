@@ -503,36 +503,37 @@ module stimulus (
 
 
     // read device and vendor id
-    //READ_CONFIG(32'h00000000);
+    READ_CONFIG(32'h00000000);
 
     // write latency timer
-    //WRITE_CONFIG(32'h0000000c, 32'h0000ff00);
-    //READ_CONFIG(32'h0000000c);
+    WRITE_CONFIG(32'h0000000c, 32'h0000ff00);
+    READ_CONFIG(32'h0000000c);
 
 
     // setup io base address register
-    //WRITE_CONFIG(32'h00000010, 32'h10000000);
-    //READ_CONFIG(32'h00000010);
+    WRITE_CONFIG(32'h00000010, 32'h10000000);
+    READ_CONFIG(32'h00000010);
 
     // setup mem32 base address register
-    //WRITE_CONFIG(32'h00000014, 32'h20000000);
-    //READ_CONFIG(32'h00000014);
+    WRITE_CONFIG(32'h00000014, 32'h20000000);
+    READ_CONFIG(32'h00000014);
 
     // setup command register to enable mastering
-    //WRITE_CONFIG(32'h00000004, 32'hff000147);
-    //READ_CONFIG(32'h00000004);
+    WRITE_CONFIG(32'h00000004, 32'hff000147);
+    READ_CONFIG(32'h00000004);
 
 
     // read io space
-    //READ32(4'b0010, 32'h10000000);
+    READ32(4'b0010, 32'h10000000);
 
     // write io space
     WRITE32(4'b0011, 32'h00000200, 32'h20202021);
+    WRITE32(4'b0011, 32'h00000201, 32'h30303032);
+    WRITE32(4'b0011, 32'h00000202, 32'h40404043);
+    
     READ32(4'b0010, 32'h00000200);
-
-
-
-
+    READ32(4'b0010, 32'h00000201);
+    READ32(4'b0010, 32'h00000202);
 
     $display(" ");
     INTERCYCLE_GAP;

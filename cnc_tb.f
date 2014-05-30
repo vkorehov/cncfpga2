@@ -1,6 +1,7 @@
 +licq_all+
 +access+r
 ./pci.v
+./cfg.v
 ./PCILOGIC.v
 ./cnc_top.v
 ./busrecord.v

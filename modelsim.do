@@ -21,10 +21,8 @@ add wave -logic /IDSEL
 add wave -logic /INTR_A
 add wave -label "OPERATION" -radix ascii /cnc_tb/STM/operation
 add wave -label "TransactionStart" -logic /UUT/PCI/TransactionStart
-add wave -label "TransactionEnd" -logic /UUT/PCI/TransactionEnd
 add wave -label "DataTransfer" -logic /UUT/PCI/DataTransfer
 add wave -label "DEVSEL_O_FF_N" -logic /UUT/PCI/DEVSEL_O_FF_N
-
-
+add wave -label "CurrentAddr" -literal -hex /UUT/PCI/CurrentAddr
 
 run -all
