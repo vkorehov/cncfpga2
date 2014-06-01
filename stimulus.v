@@ -9,6 +9,7 @@
   Copyright (c) 2005-2008 Xilinx, Inc.  All rights reserved.
 
 ***********************************************************************/
+`timescale 1 ns/1 ps
 
 
 module stimulus (
