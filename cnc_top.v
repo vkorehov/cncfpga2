@@ -238,9 +238,7 @@ PCI PCI(
    .CLK(CLK),
     .OE_INTA_N(OE_INTA_N),
    .PING_DONE(PING_DONE),
-    .RST(RST),
-    .IRDY_IN(IRDY_IN),
-    .TRDY_IN(TRDY_IN)    
+    .RST(RST)
 );
 
 endmodule

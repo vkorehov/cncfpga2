@@ -70,16 +70,6 @@ NET  "AD<3>"                                          LOC = "P61"  ;
 NET  "AD<2>"                                          LOC = "P62"  ;
 NET  "AD<1>"                                          LOC = "P63"  ;
 NET  "AD<0>"                                          LOC = "P67"  ;
-#
-################################################################################
-# Force IOB Flip Flop Use For Data Path Output Flip Flops
-################################################################################
-#
-#INST PCI/CBE_O                                IOB = TRUE ;
-#INST PCI/PAR_O                                IOB = TRUE ;
-#
-#INST PCI/AD_O                                 IOB = TRUE ;
-#
 ################################################################################
 # Force IOB Flip Flop Use For Data Path Input Flip Flops
 ################################################################################
@@ -125,96 +115,33 @@ INST "XPCI_ADIQ0"                                           IOB = TRUE ;
 ################################################################################
 # Force IOB Flip Flop Use For Control Signals
 ################################################################################
-#
-#INST XPCI_REQOQ                                                     IOB = TRUE ;
-#INST "PCI_CORE/PCI_LC/MASTER/REQO_OE"                              IOB = TRUE ;
-#
-INST XPCI_IDSELIQ                                                   IOB = TRUE ;
-#
-#INST "PCI_CORE/PCI_LC/PCI-PAR/OE_SERR_FF"                          IOB = TRUE ;
-#INST "PCI_CORE/PCI_LC/MASTER/OE_FRAME/PERR_OE"                     IOB = TRUE ;
-INST XPCI_SERRIQ                                                    IOB = TRUE ;
-INST XPCI_PERRIQ                                                    IOB = TRUE ;
-#INST XPCI_PERROQ                                                    IOB = TRUE ;
-#
-#INST "PCI_CORE/PCI_LC/MASTER/OE_FRAME/OE_FRAME"                    IOB = TRUE ;
-#INST "PCI_CORE/PCI_LC/MASTER/OE_FRAME/OE_IRDY"                     IOB = TRUE ;
+INST XPCI_IDSELIQ                                                   IOB = TRUE;
+INST XPCI_SERRIQ                                                    IOB = TRUE;
+INST XPCI_PERRIQ                                                    IOB = TRUE;
+INST XPCI_FRAMEIQ                                                   IOB = TRUE;
+INST XPCI_IRDYIQ                                                    IOB = TRUE;
 
-INST XPCI_FRAMEIQ                                                   IOB = TRUE ;
-#INST XPCI_FRAMEOQ                                                   IOB = TRUE ;
-INST XPCI_IRDYIQ                                                    IOB = TRUE ;
-#INST XPCI_IRDYOQ                                                    IOB = TRUE ;
-#
-#INST "PCI_CORE/PCI_LC/PCI-CNTL/PCI-OFCN/PCI-XOE/OE_DEVSEL"         IOB = TRUE ;
-#INST "PCI_CORE/PCI_LC/PCI-CNTL/PCI-OFCN/PCI-XOE/OE_STOP"           IOB = TRUE ;
-#INST "PCI_CORE/PCI_LC/PCI-CNTL/PCI-OFCN/PCI-XOE/OE_TRDY"           IOB = TRUE ;
+INST XPCI_DEVSELIQ                                                  IOB = TRUE;
+INST PCI/DEVSEL_O_N                                                 IOB = TRUE;
+INST PCI/OE_DEVSEL_N                                                IOB = TRUE;
 
-INST XPCI_DEVSELIQ                                                  IOB = TRUE ;
-INST PCI/XPCI_DEVSELOQ                                              IOB = TRUE ;
-INST PCI/XPCI_OEDEVSELOQ                                            IOB = TRUE ;
+INST XPCI_STOPIQ                                                    IOB = TRUE;
+INST XPCI_TRDYIQ                                                    IOB = TRUE;
+INST PCI/TRDY_O_N                                                   IOB = TRUE;
+INST PCI/OE_TRDY_N                                                  IOB = TRUE;
+INST PCI/STOP_O_N                                                   IOB = TRUE;
+INST PCI/OE_STOP_N                                                  IOB = TRUE;
 
-INST XPCI_STOPIQ                                                    IOB = TRUE ;
-#INST XPCI_STOPOQ                                                   IOB = TRUE ;
-INST XPCI_TRDYIQ                                                    IOB = TRUE ;
-INST PCI/XPCI_TRDYOQ                                                IOB = TRUE ;
-INST PCI/XPCI_OETRDYOQ                                              IOB = TRUE ;
+INST PCI/AD_O*                                                      IOB = TRUE;
 
-INST PCI/XPCI_ADOQ0 IOB = TRUE ;
-INST PCI/XPCI_ADOQ1 IOB = TRUE ;
-INST PCI/XPCI_ADOQ2 IOB = TRUE ;
-INST PCI/XPCI_ADOQ3 IOB = TRUE ;
-INST PCI/XPCI_ADOQ4 IOB = TRUE ;
-INST PCI/XPCI_ADOQ5 IOB = TRUE ;
-INST PCI/XPCI_ADOQ6 IOB = TRUE ;
-INST PCI/XPCI_ADOQ7 IOB = TRUE ;
-INST PCI/XPCI_ADOQ8 IOB = TRUE ;
-INST PCI/XPCI_ADOQ9 IOB = TRUE ;
-INST PCI/XPCI_ADOQ10 IOB = TRUE ;
-INST PCI/XPCI_ADOQ11 IOB = TRUE ;
-INST PCI/XPCI_ADOQ12 IOB = TRUE ;
-INST PCI/XPCI_ADOQ13 IOB = TRUE ;
-INST PCI/XPCI_ADOQ14 IOB = TRUE ;
-INST PCI/XPCI_ADOQ15 IOB = TRUE ;
-INST PCI/XPCI_ADOQ16 IOB = TRUE ;
-INST PCI/XPCI_ADOQ17 IOB = TRUE ;
-INST PCI/XPCI_ADOQ18 IOB = TRUE ;
-INST PCI/XPCI_ADOQ19 IOB = TRUE ;
-INST PCI/XPCI_ADOQ20 IOB = TRUE ;
-INST PCI/XPCI_ADOQ21 IOB = TRUE ;
-INST PCI/XPCI_ADOQ22 IOB = TRUE ;
-INST PCI/XPCI_ADOQ23 IOB = TRUE ;
-INST PCI/XPCI_ADOQ24 IOB = TRUE ;
-INST PCI/XPCI_ADOQ25 IOB = TRUE ;
-INST PCI/XPCI_ADOQ26 IOB = TRUE ;
-INST PCI/XPCI_ADOQ27 IOB = TRUE ;
-INST PCI/XPCI_ADOQ28 IOB = TRUE ;
-INST PCI/XPCI_ADOQ29 IOB = TRUE ;
-INST PCI/XPCI_ADOQ30 IOB = TRUE ;
-INST PCI/XPCI_ADOQ31 IOB = TRUE ;
-
-INST PCI/XPCI_OEADOQ IOB = TRUE;
-INST PCI/XPCI_PAROQ IOB = TRUE;
-INST PCI/XPCI_OEPAROQ IOB = TRUE;
-
-INST PCI/XPCI_CBEOQ0 IOB = TRUE;
-INST PCI/XPCI_CBEOQ1 IOB = TRUE;
-INST PCI/XPCI_CBEOQ2 IOB = TRUE;
-INST PCI/XPCI_CBEOQ3 IOB = TRUE;
-INST PCI/XPCI_OECBEOQ IOB = TRUE;
-
-INST PCI/XPCI_TRDYOQ IOB = TRUE;
-INST PCI/XPCI_OETRDYOQ IOB = TRUE;
-
-INST PCI/XPCI_DEVSELOQ IOB = TRUE;
-INST PCI/XPCI_OEDEVSELOQ IOB = TRUE;
-
-
+INST PCI/PAR_O                                                      IOB = TRUE;
+INST PCI/OE_PAR_N                                                   IOB = TRUE;
 #
 ################################################################################
 # Clock Buffer Placement
 ################################################################################
 #
-INST "XPCI_CKA"                                      LOC = "GCLKBUF3" ;
+INST "XPCI_CKA"                                                     LOC = "GCLKBUF3" ;
 #
 #
 ################################################################################
@@ -320,6 +247,14 @@ INST XPCI_ADIQ1                                TNM = FFS:PCI_FFS_ICE ;
 INST XPCI_ADIQ0                                TNM = FFS:PCI_FFS_ICE ;
 
 INST PCI/PING_DONE                             TNM = FFS:USER_FFS;
+
+################################################################################
+# Netflag Attributes
+################################################################################
+#
+#NET PCI/TRDY_O_N                                                  S ;
+#NET PCI/OE_TRDY_N                                                 S ;
+
 #
 ################################################################################
 # Time Groups

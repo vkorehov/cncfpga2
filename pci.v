@@ -20,29 +20,29 @@
 //////////////////////////////////////////////////////////////////////////////////
 module PCI(
     input [31:0] AD_I,
-    output [31:0] AD_O,
-    output OE_AD_N,
+    output reg [31:0] AD_O,
+    output reg OE_AD_N,
     input [3:0] CBE_I_N,
     output [3:0] CBE_O_N,
     output OE_CBE_N,
     input PAR_I,
-    output PAR_O,
-    output OE_PAR_N,
+    output reg PAR_O,
+    output reg OE_PAR_N,
     input FRAME_I_N,
     output FRAME_O_N,
     output OE_FRAME_N,
     input TRDY_I_N,
-    output TRDY_O_N,
-    output OE_TRDY_N,
+    output reg TRDY_O_N,
+    output reg OE_TRDY_N,
     input IRDY_I_N,
     output IRDY_O_N,
     output OE_IRDY_N,
     input STOP_I_N,
-    output STOP_O_N,
-    output OE_STOP_N,
+    output reg STOP_O_N,
+    output reg OE_STOP_N,
     input DEVSEL_I_N,
-    output DEVSEL_O_N,
-    output OE_DEVSEL_N,
+    output reg DEVSEL_O_N,
+    output reg OE_DEVSEL_N,
     input IDSEL_I,
     input PERR_I_N,
     output PERR_O_N,     
@@ -54,193 +54,207 @@ module PCI(
     input CLK,
     output OE_INTA_N,
     output reg PING_DONE,
-    input RST,
-    input IRDY_IN,
-    input TRDY_IN     
+    input RST
     );
 
-parameter MEM_SIZE = 63;
-parameter COMMAND_WRITE_BIT_0 = 1'b1;
-parameter WINDOW_BITS = 3;
-reg [31:0] mem[0:MEM_SIZE];
-     
-reg [31:0] BAR0_ADDR;   // we respond to an "IO write" at this address
+parameter BAR0_WINDOW_BITS = 3;
+parameter BAR1_WINDOW_BITS = 3;
+parameter IO_SIZE = (BAR0_WINDOW_BITS-2);
+parameter MEM_SIZE =(BAR1_WINDOW_BITS-2);
+// Device ID and Vendor ID
+parameter [31:0] CFG_VENDOR = 32'h0301_10ee;
+// Class Code and Revision ID
+parameter [31:0] CFG_CC_REVISION = 32'h0b40_0000 ;
+
+reg [31:0] io[0:IO_SIZE];
+reg [31:0] mem[0:MEM_SIZE];     
+reg [31:BAR0_WINDOW_BITS+1] BAR0_ADDR;   // we respond to an "IO write" at this address
+reg [31:BAR1_WINDOW_BITS+1] BAR1_ADDR;   // we respond to an "MEM write" at this address
 reg IsWrite;
 reg IsConfig;
-reg [5:0] CurrentAddr;   // Current address for burst access
+reg Transaction;
+reg [3:0] CurrentAddr;
+reg [31:0] CurrentOutput;
 
 reg [15:0]PCICommand; // PCI Command register
 parameter IOENABLED_BIT = 0;
 parameter MEMENABLED_BIT = 1;
 parameter BUSMASTER_BIT = 2;
 
-reg [31:16]PCIStatus; // PCI Status
+reg PCIIntStatusBit3; // PCI Status
+wire [15:0]PCIStatus = {
+/*Detected Parity Error*/1'b0,
+/*Signaled system Error*/1'b0,
+/*Received Master Abort*/1'b0,
+/*Received Target Abort*/1'b0,
+/*Signaled Target Abort*/1'b0,
+/*DEVSEL timing=MED*/2'b01,
+/*Master Data Parity Error*/1'b0,
+/*Fast Back-to-Back Capable*/1'b0,
+/*reserved*/1'b0,
+/*66MHZ*/1'b0,
+/*CapabilitiesList*/1'b0,
+PCIIntStatusBit3,
+/*Reserved*/1'b0,
+/*Reserved*/1'b0,
+/*Reserved*/1'b0};
 
-wire [8:0] PCIMaxLat = 8'b00000000;
-wire [8:0] PCIMinGnt = 8'b00000000;
-reg [8:0] PCIInterruptPin;
+wire [8:0] PCIMaxLat = 8'b0;
+wire [8:0] PCIMinGnt = 8'b0;
+wire [8:0] PCIInterruptPin = 8'b00000001; // #INTA
 reg [8:0] PCIInterruptLine;
+reg LastParity;
+reg BAR0Matches;
+reg CFGMatches;
+reg TransactionStart;
+reg TransactionStarted;
+reg DataTransfer;
+reg DataTransferNotReady;
+reg LastDataTransfer;
 
-reg [31:0]AD_O_FF;
-FDPE XPCI_ADOQ0 (.Q(AD_O[0]),.D(AD_O_FF[0]),.C(CLK),.CE(1'b1),.PRE(RST));
-FDPE XPCI_ADOQ1 (.Q(AD_O[1]),.D(AD_O_FF[1]),.C(CLK),.CE(1'b1),.PRE(RST));
-FDPE XPCI_ADOQ2 (.Q(AD_O[2]),.D(AD_O_FF[2]),.C(CLK),.CE(1'b1),.PRE(RST));
-FDPE XPCI_ADOQ3 (.Q(AD_O[3]),.D(AD_O_FF[3]),.C(CLK),.CE(1'b1),.PRE(RST));
-FDPE XPCI_ADOQ4 (.Q(AD_O[4]),.D(AD_O_FF[4]),.C(CLK),.CE(1'b1),.PRE(RST));
-FDPE XPCI_ADOQ5 (.Q(AD_O[5]),.D(AD_O_FF[5]),.C(CLK),.CE(1'b1),.PRE(RST));
-FDPE XPCI_ADOQ6 (.Q(AD_O[6]),.D(AD_O_FF[6]),.C(CLK),.CE(1'b1),.PRE(RST));
-FDPE XPCI_ADOQ7 (.Q(AD_O[7]),.D(AD_O_FF[7]),.C(CLK),.CE(1'b1),.PRE(RST));
-
-FDPE XPCI_ADOQ8 (.Q(AD_O[8]),.D(AD_O_FF[8]),.C(CLK),.CE(1'b1),.PRE(RST));
-FDPE XPCI_ADOQ9 (.Q(AD_O[9]),.D(AD_O_FF[9]),.C(CLK),.CE(1'b1),.PRE(RST));
-FDPE XPCI_ADOQ10 (.Q(AD_O[10]),.D(AD_O_FF[10]),.C(CLK),.CE(1'b1),.PRE(RST));
-FDPE XPCI_ADOQ11 (.Q(AD_O[11]),.D(AD_O_FF[11]),.C(CLK),.CE(1'b1),.PRE(RST));
-FDPE XPCI_ADOQ12 (.Q(AD_O[12]),.D(AD_O_FF[12]),.C(CLK),.CE(1'b1),.PRE(RST));
-FDPE XPCI_ADOQ13 (.Q(AD_O[13]),.D(AD_O_FF[13]),.C(CLK),.CE(1'b1),.PRE(RST));
-FDPE XPCI_ADOQ14 (.Q(AD_O[14]),.D(AD_O_FF[14]),.C(CLK),.CE(1'b1),.PRE(RST));
-FDPE XPCI_ADOQ15 (.Q(AD_O[15]),.D(AD_O_FF[15]),.C(CLK),.CE(1'b1),.PRE(RST));
-
-FDPE XPCI_ADOQ16 (.Q(AD_O[16]),.D(AD_O_FF[16]),.C(CLK),.CE(1'b1),.PRE(RST));
-FDPE XPCI_ADOQ17 (.Q(AD_O[17]),.D(AD_O_FF[17]),.C(CLK),.CE(1'b1),.PRE(RST));
-FDPE XPCI_ADOQ18 (.Q(AD_O[18]),.D(AD_O_FF[18]),.C(CLK),.CE(1'b1),.PRE(RST));
-FDPE XPCI_ADOQ19 (.Q(AD_O[19]),.D(AD_O_FF[19]),.C(CLK),.CE(1'b1),.PRE(RST));
-FDPE XPCI_ADOQ20 (.Q(AD_O[20]),.D(AD_O_FF[20]),.C(CLK),.CE(1'b1),.PRE(RST));
-FDPE XPCI_ADOQ21 (.Q(AD_O[21]),.D(AD_O_FF[21]),.C(CLK),.CE(1'b1),.PRE(RST));
-FDPE XPCI_ADOQ22 (.Q(AD_O[22]),.D(AD_O_FF[22]),.C(CLK),.CE(1'b1),.PRE(RST));
-FDPE XPCI_ADOQ23 (.Q(AD_O[23]),.D(AD_O_FF[23]),.C(CLK),.CE(1'b1),.PRE(RST));
-
-FDPE XPCI_ADOQ24 (.Q(AD_O[24]),.D(AD_O_FF[24]),.C(CLK),.CE(1'b1),.PRE(RST));
-FDPE XPCI_ADOQ25 (.Q(AD_O[25]),.D(AD_O_FF[25]),.C(CLK),.CE(1'b1),.PRE(RST));
-FDPE XPCI_ADOQ26 (.Q(AD_O[26]),.D(AD_O_FF[26]),.C(CLK),.CE(1'b1),.PRE(RST));
-FDPE XPCI_ADOQ27 (.Q(AD_O[27]),.D(AD_O_FF[27]),.C(CLK),.CE(1'b1),.PRE(RST));
-FDPE XPCI_ADOQ28 (.Q(AD_O[28]),.D(AD_O_FF[28]),.C(CLK),.CE(1'b1),.PRE(RST));
-FDPE XPCI_ADOQ29 (.Q(AD_O[29]),.D(AD_O_FF[29]),.C(CLK),.CE(1'b1),.PRE(RST));
-FDPE XPCI_ADOQ30 (.Q(AD_O[30]),.D(AD_O_FF[30]),.C(CLK),.CE(1'b1),.PRE(RST));
-FDPE XPCI_ADOQ31 (.Q(AD_O[31]),.D(AD_O_FF[31]),.C(CLK),.CE(1'b1),.PRE(RST));
-
-reg OE_AD_FF_N;
-FDPE XPCI_OEADOQ (.Q(OE_AD_N),.D(OE_AD_FF_N),.C(CLK),.CE(1'b1),.PRE(RST));
-
-
-reg PAR_O_FF;
-FDPE XPCI_PAROQ (.Q(PAR_O),.D(PAR_O_FF),.C(CLK),.CE(1'b1),.PRE(RST));
-reg OE_PAR_FF_N;
-FDPE XPCI_OEPAROQ (.Q(OE_PAR_N),.D(OE_PAR_FF_N),.C(CLK),.CE(1'b1),.PRE(RST));
-
-reg [3:0] CBE_O_FF_N;
-FDPE XPCI_CBEOQ0 (.Q(CBE_O_N[0]),.D(CBE_O_FF_N[0]),.C(CLK),.CE(1'b1),.PRE(RST));
-FDPE XPCI_CBEOQ1 (.Q(CBE_O_N[1]),.D(CBE_O_FF_N[1]),.C(CLK),.CE(1'b1),.PRE(RST));
-FDPE XPCI_CBEOQ2 (.Q(CBE_O_N[2]),.D(CBE_O_FF_N[2]),.C(CLK),.CE(1'b1),.PRE(RST));
-FDPE XPCI_CBEOQ3 (.Q(CBE_O_N[3]),.D(CBE_O_FF_N[3]),.C(CLK),.CE(1'b1),.PRE(RST));
-
-wire OE_CBE_FF_N;
-FDPE XPCI_OECBEOQ (.Q(OE_CBE_N),.D(OE_CBE_FF_N),.C(CLK),.CE(1'b1),.PRE(RST));
-
-    
-reg TRDY_O_FF_N;
-FDPE XPCI_TRDYOQ (.Q(TRDY_O_N),.D(TRDY_O_FF_N),.C(CLK),.CE(1'b1),.PRE(RST));
-reg OE_TRDY_FF_N;
-FDPE XPCI_OETRDYOQ (.Q(OE_TRDY_N),.D(OE_TRDY_FF_N),.C(CLK),.CE(1'b1),.PRE(RST));
-
-reg DEVSEL_O_FF_N;
-FDPE XPCI_DEVSELOQ (.Q(DEVSEL_O_N),.D(DEVSEL_O_FF_N),.C(CLK),.CE(1'b1),.PRE(RST));
-
-reg OE_DEVSEL_FF_N;
-FDPE XPCI_OEDEVSELOQ (.Q(OE_DEVSEL_N),.D(OE_DEVSEL_FF_N),.C(CLK),.CE(1'b1),.PRE(RST));
-
-
-
-//assign    PCI_CE    = I2 | (!(I3 | TRDY)) | (!(I1 | IRDY));
-PCILOGIC PCILOGIC (
-                .IRDY(IRDY_IN),
-                .TRDY(TRDY_IN),
-                .I1(1'b0),
-                .I2(1'b0),
-                .I3(1'b1),
-                .PCI_CE(PCI_CE)
-                );
-
-wire [31:0]       CFG_VENDOR;
-wire [31:0]       CFG_CC_REVISION;
-CFG CFG_ROM (
-.CFG_VENDOR(CFG_VENDOR),
-.CFG_CC_REVISION(CFG_CC_REVISION)
-);
-
-assign OE_CBE_FF_N = 1'b1;     
+assign CBE_O_N = 4'b0;
+assign OE_CBE_N = 1'b1;     
 assign OE_FRAME_N = 1'b1;
 assign OE_IRDY_N = 1'b1;
-assign OE_STOP_N = 1'b1;
 assign OE_PERR_N = 1'b1;
 assign OE_SERR_N = 1'b1;
 assign OE_REQ_N = 1'b1;     
 assign OE_INTA_N = 1'b1;
 
+// This is only way how to force not removing flip flops on equivalent signals
+//reg TRDY_O_FF_N;
+//FDPE XPCI_TRDYOQ (.Q(TRDY_O_N),.D(TRDY_O_FF_N),.C(~CLK),.CE(1'b1),.PRE(RST));                                      
+//reg OE_TRDY_FF_N;
+//FDPE XPCI_OETRDYOQ (.Q(OE_TRDY_N),.D(OE_TRDY_FF_N),.C(~CLK),.CE(1'b1),.PRE(RST));                                      
+
+//reg DEVSEL_O_FF_N;
+//FDPE XPCI_DEVSELOQ (.Q(DEVSEL_O_N),.D(DEVSEL_O_FF_N),.C(~CLK),.CE(1'b1),.PRE(RST));                                      
+//reg OE_DEVSEL_FF_N;
+//FDPE XPCI_OEDEVSELOQ (.Q(OE_DEVSEL_N),.D(OE_DEVSEL_FF_N),.C(~CLK),.CE(1'b1),.PRE(RST));                                      
+
+
 integer k;
 initial
 begin 
-    BAR0_ADDR <= 32'h00000200;
-    CurrentAddr <= 32'b0;
-    IsWrite <= 0;
-    IsConfig <= 0;
-    for (k = 0; k < MEM_SIZE; k = k + 1)
+    BAR0_ADDR[31:BAR0_WINDOW_BITS+1] = {(31 - BAR0_WINDOW_BITS){1'b0}};
+    BAR1_ADDR[31:BAR1_WINDOW_BITS+1] = {(31 - BAR1_WINDOW_BITS){1'b0}};
+    BAR0Matches = 1'b0;
+    CFGMatches =  1'b0;
+    Transaction = 1'b0;
+    CurrentAddr = 32'b0;
+    CurrentOutput = 32'b0;
+    IsWrite = 1'b0;
+    IsConfig = 1'b0;
+    LastParity = 1'b0;
+    Transaction = 1'b0;
+    TransactionStart = 1'b0;    
+    TransactionStarted = 1'b0;
+    DataTransfer = 1'b0;
+    DataTransferNotReady = 1'b0;
+    LastDataTransfer = 1'b0;
+    
+    for (k = 0; k <= IO_SIZE; k = k + 1)
     begin
-        mem[k] <= 32'b0;
+        io[k] = 32'b0;
     end
-    
-    PCICommand = 16'b0;    
-    PCIStatus = 16'b0;
-    PCIInterruptPin = 8'b00000000;
-    PCIInterruptLine = 8'b00000000;
+    for (k = 0; k <= MEM_SIZE; k = k + 1)
+    begin
+        mem[k] = 32'b0;
+    end    
+
+    PCICommand = 16'b0;
+    PCIIntStatusBit3 = 1'b0;
+    PCIInterruptLine = 8'b0;
                 
-    AD_O_FF <= 32'h0;   
-    OE_AD_FF_N <= 1;
+    AD_O = 32'b0;
+    OE_AD_N = 1'b1;
     
-    TRDY_O_FF_N <= 1'b1;
-    OE_TRDY_FF_N <= 1'b1;
+    TRDY_O_N = 1'b1;
+    OE_TRDY_N = 1'b1;
 
-    DEVSEL_O_FF_N <= 1;     
-    OE_DEVSEL_FF_N <= 1'b1;
+    STOP_O_N = 1'b1;
+    OE_STOP_N = 1'b1;
+
+
+    DEVSEL_O_N = 1'b1;     
+    OE_DEVSEL_N = 1'b1;
     
-    PAR_O_FF <= 0;
-    OE_PAR_FF_N <= 1'b1;
+    PAR_O = 1'b0;
+    OE_PAR_N = 1'b1;
     
-    PING_DONE  <= 0;
+    PING_DONE  = 1'b0;
 end
-
-
-wire TransactionStart = DEVSEL_O_FF_N & ~FRAME_I_N & ((PCICommand[IOENABLED_BIT] & (AD_I[31:WINDOW_BITS+1]==BAR0_ADDR[31:WINDOW_BITS+1])) | (IDSEL_I & (AD_I[1:0] == 2'b00) & (AD_I[10:8] == 3'b00))); 
-wire DataTransfer = ~DEVSEL_O_FF_N & ~IRDY_I_N;
-wire DataTransferNotReady = ~DEVSEL_O_FF_N & ~FRAME_I_N & IRDY_I_N;
 
 always @(posedge CLK)
 begin
+   TransactionStart = ~Transaction & ~FRAME_I_N;
+   DataTransfer = Transaction & ~IRDY_I_N;
+   LastDataTransfer = FRAME_I_N;
+   DataTransferNotReady = Transaction & ~FRAME_I_N & IRDY_I_N;   
+   BAR0Matches = ((AD_I[31:BAR0_WINDOW_BITS+1]==BAR0_ADDR[31:BAR0_WINDOW_BITS+1]) & (AD_I[1:0] == 2'b00)) ? 1'b1 : 1'b0;
+   CFGMatches = ((AD_I[1:0] == 2'b00) & (AD_I[10:8] == 3'b000)) ? 1'b1 : 1'b0;   
+
    if (TransactionStart)
    begin
-       DEVSEL_O_FF_N <= 0; // this is our transaction
-       OE_DEVSEL_FF_N <= 0;// this is our transaction
-       OE_TRDY_FF_N <= 0;// we are always ready
-       TRDY_O_FF_N <= 0; // we are always ready
-       IsWrite = CBE_I_N[0];       
        IsConfig = IDSEL_I;
-       CurrentAddr = IDSEL_I ? (AD_I[7:2]) : ({32'b0, AD_I[WINDOW_BITS:0]});
-       if(~IsWrite)
+       IsWrite = CBE_I_N[0];
+       if (PCICommand[IOENABLED_BIT] & BAR0Matches)
        begin
-           OE_AD_FF_N <= 0;
-           OE_PAR_FF_N <= 0;
+           CurrentAddr = {{(5-BAR0_WINDOW_BITS){1'b0}}, AD_I[BAR0_WINDOW_BITS:2]};
+           TransactionStarted = 1'b1;
+       end
+       else if (IsConfig & CFGMatches)
+       begin
+           CurrentAddr = AD_I[5:2];
+           TransactionStarted = 1'b1;           
+       end
+       else
+       begin
+           TransactionStarted = 1'b0;       
+       end
+   end
+   else
+   begin
+       TransactionStarted = 1'b0;
+   end
+   // Parity calculation
+   LastParity = ^{CurrentOutput, CBE_I_N};   
+end
+
+// output encode
+always @(negedge CLK)
+begin
+   if (TransactionStart)
+   begin
+       if (TransactionStarted)
+       begin
+           Transaction = 1'b1;
+           DEVSEL_O_N = 1'b0;// this is our transaction
+           OE_DEVSEL_N = 1'b0;// this is our transaction
+           OE_TRDY_N = 1'b0;// we are always ready
+           TRDY_O_N = 1'b0; // we are always ready
+           STOP_O_N  = 1'b0; // Always use "Disconnect with data"
+           OE_STOP_N = 1'b0;// Always use "Disconnect with data"
+           if(~IsWrite)
+           begin
+               OE_AD_N = 1'b0;
+               OE_PAR_N = 1'b0;
+           end       
        end
    end
    else if (DataTransfer)
    begin
-       if (FRAME_I_N) // Last Data Transfer?
+       if (LastDataTransfer)
        begin
+           Transaction = 1'b0;
            // Signal High for now
-           DEVSEL_O_FF_N <= 1;           
-           TRDY_O_FF_N <= 1;
+           DEVSEL_O_N = 1'b1;           
+           TRDY_O_N = 1'b1;
+           STOP_O_N = 1'b1;
            // Turn off immediately
-           OE_AD_FF_N <= 1;
+           OE_AD_N = 1'b1;                      
        end
-       CurrentAddr = CurrentAddr + 1;
+       //CurrentAddr = CurrentAddr + 1; bursts not supported
    end
    else if (DataTransferNotReady)
    begin
@@ -249,92 +263,87 @@ begin
    else
    begin
        // Turn off after 1 clock
-       OE_DEVSEL_FF_N <= 1'b1;
-       OE_TRDY_FF_N <= 1'b1;      
-       OE_PAR_FF_N <= 1;       
+       OE_DEVSEL_N = 1'b1;
+       OE_TRDY_N = 1'b1;
+       OE_STOP_N = 1'b1;       
+       OE_PAR_N = 1'b1;
        // Turn off again for extra resilience
-       OE_AD_FF_N <= 1;
+       OE_AD_N = 1'b1;
+       Transaction = 1'b0;
    end
+   // Output parity with 1 clock skew
+   PAR_O = LastParity;
 end
 
 // Transfer handling
-always @(posedge CLK)
+always @(negedge CLK)
 begin
    if ((TransactionStart | DataTransfer) & ~IsWrite) // Read transaction?
    begin
        if (IsConfig)
        begin
            case(CurrentAddr)
-               0: AD_O_FF <= CFG_VENDOR;
-               1: AD_O_FF <= {PCIStatus, PCICommand};
-               2: AD_O_FF <= CFG_CC_REVISION;
-               15: AD_O_FF <= {PCIMaxLat, PCIMinGnt, PCIInterruptPin, PCIInterruptLine};
-               default: AD_O_FF <= 32'b0;
+               0: CurrentOutput = CFG_VENDOR;
+               1: CurrentOutput = {PCIStatus, PCICommand};
+               2: CurrentOutput = CFG_CC_REVISION;
+               4: CurrentOutput = {BAR0_ADDR[31:BAR0_WINDOW_BITS+1], {(BAR0_WINDOW_BITS){1'b0}}, /* IO space */1'b1}; 
+               15: CurrentOutput = {PCIMaxLat, PCIMinGnt, PCIInterruptPin, PCIInterruptLine};
+               default: CurrentOutput = 32'b0;
            endcase
        end
        else
        begin
-           AD_O_FF <= mem[CurrentAddr];
+           CurrentOutput = io[CurrentAddr];
        end
+       AD_O = CurrentOutput;
    end
 end
-always @(posedge CLK)
-begin
-   if (DataTransfer & ~IsWrite) // Read transaction?
-   begin
-       // calculate parity
-       if (IsConfig)
-       begin
-           case(CurrentAddr-1)
-               0: AD_O_FF <= ^{CFG_VENDOR, CBE_I_N};
-               1: AD_O_FF <= ^{PCIStatus, PCICommand, CBE_I_N};
-               2: AD_O_FF <= ^{CFG_CC_REVISION, CBE_I_N};
-               15: AD_O_FF <= ^{PCIMaxLat, PCIMinGnt, PCIInterruptPin, PCIInterruptLine, CBE_I_N};               
-               default: AD_O_FF <= ^{32'b0, CBE_I_N};
-           endcase
-       end
-       else
-       begin
-           AD_O_FF <= ^{mem[CurrentAddr-1], CBE_I_N};
-       end       
-   end
-end
+
+
+
 always @(posedge CLK)
 begin
     if (DataTransfer & IsWrite) // Write transaction?
     begin
-        PING_DONE <= AD_I[0];
         if (IsConfig)
         begin
-            case(CurrentAddr-1) // For Write transaction must be -1
-                0: begin end// do nothing
+            case(CurrentAddr)
                 1: begin
-                   if (~CBE_I_N[3])
-                       PCIStatus[15:8] <= PCIStatus & ~AD_I[31:24];
                    if (~CBE_I_N[2])
-                       PCIStatus[7:0] <= PCIStatus & ~AD_I[23:16];
+                       PCIIntStatusBit3 = PCIIntStatusBit3 & ~AD_I[19];
                    if (~CBE_I_N[1])
-                       PCICommand[15:8] <= AD_I[15:8];
+                       PCICommand[15:8] = AD_I[15:8];
                    if (~CBE_I_N[0])
-                       PCICommand[7:0] <= AD_I[7:0];
+                       PCICommand[7:0] = AD_I[7:0];
                    end
-                2: begin end // do nothing
+                4: begin
+                   BAR0_ADDR[31:BAR0_WINDOW_BITS+1] = AD_I[31:BAR0_WINDOW_BITS+1];
+                   end
                 15:begin
-                   if (~CBE_I_N[1])
-                       PCIInterruptPin <= AD_I[15:8];
                    if (~CBE_I_N[0])
-                       PCIInterruptLine <= AD_I[7:0];                                        
+                       PCIInterruptLine = AD_I[7:0];
                    end
                 default: begin end // do nothing
             endcase
         end
         else
         begin
-            mem[CurrentAddr-1] <= AD_I;// For Write transaction must be -1
+            PING_DONE = 1'b1;
+            io[CurrentAddr] = AD_I;
         end
     end
 end
 
 endmodule
+
+//assign    PCI_CE    = I2 | (!(I3 | TRDY)) | (!(I1 | IRDY));
+//PCILOGIC PCILOGIC (
+//                .IRDY(IRDY_IN),
+//                .TRDY(TRDY_IN),
+//                .I1(1'b0),
+//                .I2(1'b0),
+//                .I3(1'b1),
+//                .PCI_CE(PCI_CE)
+//                );
 
 

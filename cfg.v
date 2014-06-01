@@ -52,7 +52,7 @@ module CFG ( CFG_VENDOR, CFG_CC_REVISION );
   /*  Configure Device, Vendor ID, Class Code, and Revision ID */
   /*************************************************************/
   // Device ID and Vendor ID
-  assign CFG_VENDOR[31:0] = 32'h0300_10ee ;
+  assign CFG_VENDOR[31:0] = 32'h0301_10ee ;
   // Class Code and Revision ID
   assign CFG_CC_REVISION[31:0] = 32'h0b40_0000 ;
 
