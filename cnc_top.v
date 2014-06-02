@@ -46,7 +46,7 @@ BUFG XPCI_CKA               (.O(CLK),.I(NUB));
 IBUF_PCI33_5  XPCI_RST      (.O(RST_I),.I(RST_N));
 assign RST = ~RST_I;
 // make sure that RST is bound to Global Reset Request, which will put all state to <initial> block defined one.
-STARTUP_SPARTAN2 SPARTAN2(.GSR(RST), .CLK(1'b0), .GTS(1'b0));
+STARTUP_SPARTAN2 SPARTAN2(.GSR(RST)/*, .CLK(1'b0), .GTS(1'b0)*/);
 
 IOBUF_PCI33_5 XPCI_ADB31 (.O(AD_IN31),.IO(AD[31]),.I(AD_O31),.T(OE_AD_N));
 IOBUF_PCI33_5 XPCI_ADB30 (.O(AD_IN30),.IO(AD[30]),.I(AD_O30),.T(OE_AD_N));
