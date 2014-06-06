@@ -62,7 +62,10 @@ parameter BAR1_WINDOW_BITS = 3;
 parameter IO_SIZE = (BAR0_WINDOW_BITS-2);
 parameter MEM_SIZE =(BAR1_WINDOW_BITS-2);
 // Device ID and Vendor ID
-parameter [31:0] CFG_VENDOR = 32'h0300_10ea;
+parameter [15:0] CFG_DEVICE = 16'h0300;
+// Device ID and Vendor ID
+parameter [15:0] CFG_VENDOR = 16'h10ea;
+
 // Class Code and Revision ID
 parameter [31:0] CFG_CC_REVISION = 32'h0b40_0000 ;
 
@@ -96,7 +99,7 @@ wire [15:0]PCIStatus = {
     /*reserved*/1'b0,
     /*66MHZ*/1'b0,
     /*CapabilitiesList*/1'b0,
-    PCIIntStatusBit3,
+    /*PCIIntStatusBit3*/1'b0,
     /*Reserved*/1'b0,
     /*Reserved*/1'b0,
     /*Reserved*/1'b0
@@ -108,7 +111,7 @@ wire [15:0]PCICommand = {
     /*Reserved*/ 1'b0,
     /*Reserved*/ 1'b0,
     /*Reserved*/ 1'b0,
-    PCICommandIntrDisableBit10,
+    /*PCICommandIntrDisableBit10*/1'b0,
     /*Fast Back-to-Back Enable*/ 1'b0,
     /*SERR# Enable*/ 1'b0,
     /*Reserved*/ 1'b0,
@@ -201,8 +204,8 @@ wire DataTransfer = (Transaction == TX_TRDY) & ~IRDY_I_N;
 wire LastDataTransfer = FRAME_I_N;
 wire DataTransferNotReady = (Transaction == TX_TRDY) & ~FRAME_I_N & IRDY_I_N;   
 
-wire BAR0Matches = ((AD_I[31:BAR0_WINDOW_BITS+1]==BAR0_ADDR[31:BAR0_WINDOW_BITS+1]) & (AD_I[1:0] == 2'b00));
-wire CFGMatches = ((AD_I[1:0] == 2'b00) & (AD_I[10:8] == 3'b000));   
+wire BAR0Matches = ((CBE_I_N[3:1] == 3'b001) & (AD_I[31:BAR0_WINDOW_BITS+1]==BAR0_ADDR[31:BAR0_WINDOW_BITS+1]) & (AD_I[1:0] == 2'b00));
+wire CFGMatches = ((CBE_I_N[3:1] == 3'b101) & (AD_I[1:0] == 2'b00) & (AD_I[10:8] == 3'b000));
 
 always @(posedge CLK)
 begin
@@ -284,11 +287,12 @@ begin
        if (IsConfig)
        begin
            case(CurrentAddr)
-               0: CurrentOutput = CFG_VENDOR;
+               0: CurrentOutput = {CFG_DEVICE, CFG_VENDOR};
                1: CurrentOutput = {PCIStatus, PCICommand};
                2: CurrentOutput = CFG_CC_REVISION;
-               //4: CurrentOutput = {BAR0_ADDR[31:BAR0_WINDOW_BITS+1], {(BAR0_WINDOW_BITS){1'b0}}, /* IO space */1'b1}; 
+               4: CurrentOutput = {BAR0_ADDR[31:BAR0_WINDOW_BITS+1], {(BAR0_WINDOW_BITS){1'b0}}, /* IO space */1'b1}; 
                //15: CurrentOutput = {PCIMaxLat, PCIMinGnt, PCIInterruptPin, PCIInterruptLine};
+               16: CurrentOutput = {32'b0, BAR0_ADDR};
                default: CurrentOutput = 32'b0;
            endcase
        end
@@ -320,7 +324,7 @@ begin
                        PCICommandIOSpaceBit0 = AD_I[0];
                    end
                 4: begin
-                   //BAR0_ADDR[31:BAR0_WINDOW_BITS+1] = AD_I[31:BAR0_WINDOW_BITS+1];
+                   BAR0_ADDR[31:BAR0_WINDOW_BITS+1] = AD_I[31:BAR0_WINDOW_BITS+1];
                    end
                 15:begin
                    //if (~CBE_I_N[0])
