@@ -21,7 +21,7 @@
 module cnc_top(
     inout [31:0] AD,
     inout [3:0] CBE_N,
-     inout PAR,
+    inout PAR,
     inout FRAME_N,
     inout TRDY_N,
     inout IRDY_N,

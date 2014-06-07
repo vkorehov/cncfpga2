@@ -131,11 +131,42 @@ INST PCI/TRDY_O_N                                                   IOB = TRUE;
 INST PCI/OE_TRDY_N                                                  IOB = TRUE;
 INST PCI/STOP_O_N                                                   IOB = TRUE;
 INST PCI/OE_STOP_N                                                  IOB = TRUE;
-
-INST PCI/AD_O*                                                      IOB = TRUE;
-
 INST PCI/PAR_O                                                      IOB = TRUE;
 INST PCI/OE_PAR_N                                                   IOB = TRUE;
+
+INST PCI/AD_O_0                                                      IOB = TRUE;
+INST PCI/AD_O_1                                                      IOB = TRUE;
+INST PCI/AD_O_2                                                      IOB = TRUE;
+INST PCI/AD_O_3                                                      IOB = TRUE;
+INST PCI/AD_O_4                                                      IOB = TRUE;
+INST PCI/AD_O_5                                                      IOB = TRUE;
+INST PCI/AD_O_6                                                      IOB = TRUE;
+INST PCI/AD_O_7                                                      IOB = TRUE;
+INST PCI/AD_O_8                                                      IOB = TRUE;
+INST PCI/AD_O_9                                                      IOB = TRUE;
+INST PCI/AD_O_10                                                     IOB = TRUE;
+INST PCI/AD_O_11                                                     IOB = TRUE;
+INST PCI/AD_O_12                                                     IOB = TRUE;
+INST PCI/AD_O_13                                                     IOB = TRUE;
+INST PCI/AD_O_14                                                     IOB = TRUE;
+INST PCI/AD_O_15                                                     IOB = TRUE;
+INST PCI/AD_O_16                                                     IOB = TRUE;
+INST PCI/AD_O_17                                                     IOB = TRUE;
+INST PCI/AD_O_18                                                     IOB = TRUE;
+INST PCI/AD_O_19                                                     IOB = TRUE;
+INST PCI/AD_O_20                                                     IOB = TRUE;
+INST PCI/AD_O_21                                                     IOB = TRUE;
+INST PCI/AD_O_22                                                     IOB = TRUE;
+INST PCI/AD_O_23                                                     IOB = TRUE;
+INST PCI/AD_O_24                                                     IOB = TRUE;
+INST PCI/AD_O_25                                                     IOB = TRUE;
+INST PCI/AD_O_26                                                     IOB = TRUE;
+INST PCI/AD_O_27                                                     IOB = TRUE;
+INST PCI/AD_O_28                                                     IOB = TRUE;
+INST PCI/AD_O_29                                                     IOB = TRUE;
+INST PCI/AD_O_30                                                     IOB = TRUE;
+INST PCI/AD_O_31                                                     IOB = TRUE;
+
 #
 ################################################################################
 # Clock Buffer Placement
@@ -204,9 +235,40 @@ NET  "AD<0>"                                 TNM = PADS:PCI_PADS_D ;
 ################################################################################
 #
 
-#INST PCI/CBE_O                   TNM = FFS:PCI_FFS_OCE ;
-#
-#INST PCI/AD_O                    TNM = FFS:PCI_FFS_OCE ;
+#INST PCI/CBE_O_N*                   TNM = FFS:PCI_FFS_OCE ; Currently not in use
+INST PCI/AD_O_0                    TNM = FFS:PCI_FFS_OCE ;
+INST PCI/AD_O_1                    TNM = FFS:PCI_FFS_OCE ;
+INST PCI/AD_O_2                    TNM = FFS:PCI_FFS_OCE ;
+INST PCI/AD_O_3                    TNM = FFS:PCI_FFS_OCE ;
+INST PCI/AD_O_4                    TNM = FFS:PCI_FFS_OCE ;
+INST PCI/AD_O_5                    TNM = FFS:PCI_FFS_OCE ;
+INST PCI/AD_O_6                    TNM = FFS:PCI_FFS_OCE ;
+INST PCI/AD_O_7                    TNM = FFS:PCI_FFS_OCE ;
+INST PCI/AD_O_8                    TNM = FFS:PCI_FFS_OCE ;
+INST PCI/AD_O_9                    TNM = FFS:PCI_FFS_OCE ;
+INST PCI/AD_O_10                    TNM = FFS:PCI_FFS_OCE ;
+INST PCI/AD_O_11                    TNM = FFS:PCI_FFS_OCE ;
+INST PCI/AD_O_12                    TNM = FFS:PCI_FFS_OCE ;
+INST PCI/AD_O_13                    TNM = FFS:PCI_FFS_OCE ;
+INST PCI/AD_O_14                    TNM = FFS:PCI_FFS_OCE ;
+INST PCI/AD_O_15                    TNM = FFS:PCI_FFS_OCE ;
+INST PCI/AD_O_16                    TNM = FFS:PCI_FFS_OCE ;
+INST PCI/AD_O_17                    TNM = FFS:PCI_FFS_OCE ;
+INST PCI/AD_O_18                    TNM = FFS:PCI_FFS_OCE ;
+INST PCI/AD_O_19                    TNM = FFS:PCI_FFS_OCE ;
+INST PCI/AD_O_20                    TNM = FFS:PCI_FFS_OCE ;
+INST PCI/AD_O_21                    TNM = FFS:PCI_FFS_OCE ;
+INST PCI/AD_O_22                    TNM = FFS:PCI_FFS_OCE ;
+INST PCI/AD_O_23                    TNM = FFS:PCI_FFS_OCE ;
+INST PCI/AD_O_24                    TNM = FFS:PCI_FFS_OCE ;
+INST PCI/AD_O_25                    TNM = FFS:PCI_FFS_OCE ;
+INST PCI/AD_O_26                    TNM = FFS:PCI_FFS_OCE ;
+INST PCI/AD_O_27                    TNM = FFS:PCI_FFS_OCE ;
+INST PCI/AD_O_28                    TNM = FFS:PCI_FFS_OCE ;
+INST PCI/AD_O_29                    TNM = FFS:PCI_FFS_OCE ;
+INST PCI/AD_O_30                    TNM = FFS:PCI_FFS_OCE ;
+INST PCI/AD_O_31                    TNM = FFS:PCI_FFS_OCE ;
+
 #
 INST XPCI_CBIQ3                                TNM = FFS:PCI_FFS_ICE ;
 INST XPCI_CBIQ2                                TNM = FFS:PCI_FFS_ICE ;
