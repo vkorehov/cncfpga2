@@ -65,7 +65,7 @@ parameter MEM_BITS =(BAR2_WINDOW_BITS-2);
 // Device ID and Vendor ID
 parameter [15:0] CFG_DEVICE = 16'h0300;
 // Device ID and Vendor ID
-parameter [15:0] CFG_VENDOR = 16'h10ea;
+parameter [15:0] CFG_VENDOR = 16'h10ee;
 // Class Code
 parameter [15:0] CFG_CC = 16'h0b40;
 // Revision ID
@@ -77,6 +77,7 @@ reg [31:BAR1_WINDOW_BITS] Bar1Addr;// we respond to an "IO write" at this addres
 reg [31:BAR2_WINDOW_BITS] Bar2Addr;// we respond to an "MEM write" at this address
 reg IsWrite;
 reg IsConfig;
+reg IsMemory;
 
 reg [1:0] Transaction;
 parameter TX_NONE = 2'b00;
@@ -87,6 +88,7 @@ reg [5:0] CurrentAddr;
 reg [31:0] CurrentOutput;
 
 reg PCICommandIOSpaceBit0; // PCI Command register
+reg PCICommandMEMSpaceBit0; // PCI Command register
 reg PCICommandIntrDisableBit10; // PCI Command register
 reg PCIIntrStatusBit3; // PCI Status
 
@@ -123,7 +125,7 @@ wire [15:0]PCICommand = {
     /*Memory Write and Invalidate Enable*/ 1'b0,
     /*Special Cycles*/ 1'b0,
     /*Bus Master*/ 1'b0,
-    /*Memory Space*/ 1'b0,
+    PCICommandMEMSpaceBit0,
     PCICommandIOSpaceBit0
 };
 
@@ -155,6 +157,7 @@ begin
     CurrentOutput = 32'b0;
     IsWrite = 1'b0;
     IsConfig = 1'b0;
+    IsMemory = 1'b0; 
     LastParity = 1'b0;
     
     for (k = 0; k < IO_BITS; k = k + 1)
@@ -167,6 +170,7 @@ begin
     end    
 
     PCICommandIOSpaceBit0 = 1'b0;
+    PCICommandMEMSpaceBit0 = 1'b0;
     PCICommandIntrDisableBit10 = 1'b0;
     PCIIntrStatusBit3 = 1'b0;
     PCIInterruptLine = 8'b0;
@@ -187,17 +191,18 @@ begin
     PAR_O = 1'b0;
     OE_PAR_N = 1'b1;
     
-    PING_DONE = 1'b0;
+    PING_DONE = 1'b1;
 end
 
 
 wire TransactionStart = (Transaction == TX_NONE) & ~FRAME_I_N;
 wire DataTransfer = (Transaction == TX_TRDY) & ~IRDY_I_N;
 wire LastDataTransfer = FRAME_I_N;
-wire DataTransferNotReady = (Transaction == TX_TRDY) & ~FRAME_I_N & IRDY_I_N;   
+wire DataTransferNotReady = (Transaction == TX_TRDY) & ~FRAME_I_N & IRDY_I_N;
 
-wire BAR1Matches = ((CBE_I_N[3:1] == 3'b001) & (AD_I[31:BAR1_WINDOW_BITS]==Bar1Addr[31:BAR1_WINDOW_BITS]) & (AD_I[1:0] == 2'b00));
-wire CFGMatches = ((CBE_I_N[3:1] == 3'b101) & (AD_I[1:0] == 2'b00) & (AD_I[10:8] == 3'b000));
+wire BAR1Matches = (CBE_I_N[3:1] == 3'b001) & (AD_I[31:BAR1_WINDOW_BITS]==Bar1Addr[31:BAR1_WINDOW_BITS]) & (AD_I[1:0] == 2'b00);
+wire BAR2Matches = (CBE_I_N[3:1] == 3'b011) & (AD_I[31:BAR2_WINDOW_BITS]==Bar2Addr[31:BAR2_WINDOW_BITS]);
+wire CFGMatches = (CBE_I_N[3:1] == 3'b101) & (AD_I[1:0] == 2'b00) & (AD_I[10:8] == 3'b000);
 
 always @(posedge CLK)
 begin
@@ -207,67 +212,81 @@ begin
        IsWrite = CBE_I_N[0];
        if (PCICommandIOSpaceBit0 & BAR1Matches)
        begin
+           IsMemory = 1'b0;
            Transaction = TX_DEVSEL;
            CurrentAddr = {{(32){1'b0}}, AD_I[(BAR1_WINDOW_BITS-1):2]};
-           DEVSEL_O_N <= 1'b0;// this is our transaction
-           OE_DEVSEL_N <= 1'b0;// this is our transaction                      
+           DEVSEL_O_N = 1'b0;// this is our transaction
+           OE_DEVSEL_N = 1'b0;// this is our transaction                      
            if(~IsWrite)
            begin
-               OE_AD_N <= 1'b0;
-               OE_PAR_N <= 1'b0;
+               OE_AD_N = 1'b0;
+               OE_PAR_N = 1'b0;
            end
        end
+       else if (PCICommandMEMSpaceBit0 & BAR2Matches)
+       begin
+           IsMemory = 1'b1;
+           Transaction = TX_DEVSEL;
+           CurrentAddr = {{(32){1'b0}}, AD_I[(BAR2_WINDOW_BITS-1):2]};
+           DEVSEL_O_N = 1'b0;// this is our transaction
+           OE_DEVSEL_N = 1'b0;// this is our transaction                      
+           if(~IsWrite)
+           begin
+               OE_AD_N = 1'b0;
+               OE_PAR_N = 1'b0;
+           end
+       end       
        if (IsConfig & CFGMatches)
        begin
            Transaction = TX_DEVSEL;
            CurrentAddr = AD_I[7:2];
-           DEVSEL_O_N <= 1'b0;// this is our transaction
-           OE_DEVSEL_N <= 1'b0;// this is our transaction
+           DEVSEL_O_N = 1'b0;// this is our transaction
+           OE_DEVSEL_N = 1'b0;// this is our transaction
            if(~IsWrite)
            begin
-               OE_AD_N <= 1'b0;
-               OE_PAR_N <= 1'b0;
+               OE_AD_N = 1'b0;
+               OE_PAR_N = 1'b0;
            end
        end
    end
    else if (Transaction == TX_DEVSEL)
    begin
-       OE_TRDY_N <= 1'b0;// we are ready after 1 clock
-       TRDY_O_N <= 1'b0; // we are ready after 1 clock
-       STOP_O_N  <= 1'b0;// Always use "Disconnect with data"
-       OE_STOP_N <= 1'b0;// Always use "Disconnect with data"
+       OE_TRDY_N = 1'b0;// we are ready after 1 clock
+       TRDY_O_N = 1'b0; // we are ready after 1 clock
+       STOP_O_N  = 1'b0;// Always use "Disconnect with data"
+       OE_STOP_N = 1'b0;// Always use "Disconnect with data"
        Transaction = TX_TRDY;
    end
    else if (DataTransfer)
    begin
        // Output parity with 1 clock shift
-       PAR_O <= LastParity;
+       PAR_O = LastParity;
 
        if (LastDataTransfer)
        begin
            Transaction = TX_NONE;
            // Signal High for now
-           DEVSEL_O_N <= 1'b1;
-           TRDY_O_N <= 1'b1;
-           STOP_O_N <= 1'b1;
+           DEVSEL_O_N = 1'b1;
+           TRDY_O_N = 1'b1;
+           STOP_O_N = 1'b1;
            // Turn off immediately
-           OE_AD_N <= 1'b1;                      
+           OE_AD_N = 1'b1;                      
        end
    end
    else if (DataTransferNotReady)
    begin
        // WAIT cycle
    end
-   else
+   else // Last resort
    begin
        Transaction = TX_NONE;
        // Turn off after 1 clock
-       OE_DEVSEL_N <= 1'b1;
-       OE_TRDY_N <= 1'b1;
-       OE_STOP_N <= 1'b1;
-       OE_PAR_N <= 1'b1;
+       OE_DEVSEL_N = 1'b1;
+       OE_TRDY_N = 1'b1;
+       OE_STOP_N = 1'b1;
+       OE_PAR_N = 1'b1;
        // Turn off again for extra resilience
-       OE_AD_N <= 1'b1;
+       OE_AD_N = 1'b1;
    end   
 end
 
@@ -282,17 +301,22 @@ begin
                0: CurrentOutput = {CFG_DEVICE, CFG_VENDOR};
                1: CurrentOutput = {PCIStatus, PCICommand};
                2: CurrentOutput = {CFG_CC, CFG_REVISION};
-               4: CurrentOutput = {Bar1Addr[31:BAR1_WINDOW_BITS], {(BAR1_WINDOW_BITS-1){1'b0}}, /* IO space */1'b1}; 
+               4: CurrentOutput = {Bar1Addr[31:BAR1_WINDOW_BITS], {(BAR1_WINDOW_BITS-1){1'b0}}, /* IO space */1'b1};
+               5: CurrentOutput = {Bar2Addr[31:BAR2_WINDOW_BITS], {(BAR2_WINDOW_BITS-4){1'b0}}, /* MEM space, Prefetch=true,location=32bit */4'b1000};
                15: CurrentOutput = {PCIMaxLat, PCIMinGnt, PCIInterruptPin, PCIInterruptLine};
                16: CurrentOutput = {32'b0, Bar1Addr};
+               17: CurrentOutput = {32'b0, Bar2Addr};
                default: CurrentOutput = 32'b0;
            endcase
        end
        else
        begin
-           CurrentOutput = io[CurrentAddr];
+           if(IsMemory)           
+               CurrentOutput = mem[CurrentAddr];
+           else
+               CurrentOutput = io[CurrentAddr];           
        end
-       AD_O <= CurrentOutput;
+       AD_O = CurrentOutput;
        // Parity calculation
        LastParity = ^{CurrentOutput, CBE_I_N};       
    end
@@ -308,13 +332,19 @@ begin
         begin
             case(CurrentAddr)
                 1: begin
-                   if (~CBE_I_N[1])                       
+                   if (~CBE_I_N[1])
                        PCICommandIntrDisableBit10 = AD_I[10];
                    if (~CBE_I_N[0])
+                   begin
                        PCICommandIOSpaceBit0 = AD_I[0];
+                       PCICommandMEMSpaceBit0 = AD_I[1];
+                   end
                    end
                 4: begin
                    Bar1Addr[31:BAR1_WINDOW_BITS] = AD_I[31:BAR1_WINDOW_BITS];
+                   end
+                5: begin
+                   Bar2Addr[31:BAR2_WINDOW_BITS] = AD_I[31:BAR2_WINDOW_BITS];
                    end
                 15:begin
                    if (~CBE_I_N[0])
@@ -325,8 +355,11 @@ begin
         end
         else
         begin
-            PING_DONE <= 1'b1;
-            io[CurrentAddr] = AD_I;
+            PING_DONE = 1'b0;
+            if(IsMemory)            
+                mem[CurrentAddr] = AD_I;
+            else
+                io[CurrentAddr] = AD_I;            
         end
     end
 end

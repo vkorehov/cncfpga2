@@ -17,7 +17,7 @@ CONFIG PROHIBIT = "P107" ; # INIT
 # I/O Assignment
 ################################################################################
 #
-NET  "PING_DONE"   LOC = "P96" | IOB = TRUE | IOSTANDARD = LVTTL | SLEW=SLOW;
+NET  "PING_DONE"   LOC = "P96" | IOB = TRUE | IOSTANDARD = LVTTL;
 
 NET  "PCLK"                                                       LOC = "P185" ;
 NET  "INTA_N"                                            LOC = "P195" ;
