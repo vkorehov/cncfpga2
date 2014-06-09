@@ -308,7 +308,7 @@ INST XPCI_ADIQ2                                TNM = FFS:PCI_FFS_ICE ;
 INST XPCI_ADIQ1                                TNM = FFS:PCI_FFS_ICE ;
 INST XPCI_ADIQ0                                TNM = FFS:PCI_FFS_ICE ;
 
-INST PCI/PING_DONE                             TNM = FFS:USER_FFS;
+#INST PCI/PING_DONE                             TNM = FFS:USER_FFS;
 
 ################################################################################
 # Netflag Attributes
